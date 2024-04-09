@@ -13,7 +13,7 @@ public class Deck {
 		difficulty = mode;
 		deck = new ArrayList<Card>();
 	}
-
+	
 	public ArrayList<Card> createDeck() {
 
 		if (theme == "cat") {
