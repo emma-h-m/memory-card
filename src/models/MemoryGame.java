@@ -91,7 +91,7 @@ public class MemoryGame {
 	 */
 	private void endGame() {
 		// Add score/numGuesses to Stats object
-		//stats.addScore(numGuesses); <- Need something like this in stats class.
+		stats.addScore(theme, difficulty, numGuesses); 
 		
 		// Ask if user wants to play again.
 		// playAgain = userInput(); <- Need to get user input for this
