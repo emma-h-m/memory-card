@@ -13,12 +13,16 @@ public class MemoryGame {
 	private boolean match = false;
 	private boolean playAgain = true;
 	private Stats stats;
+	
+	// Variables for testing
+	public Card card1, card2;
 
 	public MemoryGame(String themeSelection, String mode) {
 		theme = themeSelection;
 		difficulty = mode;
 		Deck deckObject = new Deck(theme, difficulty);
 		deck = deckObject.createDeck();
+		stats = new Stats();
 	}
 
 	public void playGame() {
@@ -26,19 +30,22 @@ public class MemoryGame {
 		while (playAgain) {
 			
 			// Shuffle the deck
-			Collections.shuffle(deck);
+			//Collections.shuffle(deck);
 
 			// Lay the cards out on the table.
 			// TBA (Maybe this happens in GUI?)
 
 			// Start the game.
 			while (deck.size() > 0) {
-
+				int i = 0; //testing
 				// The player picks a card
-				Card card1 = chooseCard();
+				//Card card1 = chooseCard();
+				card1 = deck.get(i);//testing
+				
 				// The player picks another card
-				Card card2 = chooseCard();
-
+				//Card card2 = chooseCard();
+				card2 = deck.get(i + 1);//testing
+	
 				// The game compares the cards
 				compareCards(card1, card2);
 
@@ -57,6 +64,7 @@ public class MemoryGame {
 			// The end of the while loop means all of the cards are gone,
 			// so the game is over.
 			endGame();
+			
 		}
 	}
 
@@ -72,7 +80,7 @@ public class MemoryGame {
 
 	// This method sets match to true if the cards have the same title.
 	// If they don't, match is set to false.
-	private void compareCards(Card card1, Card card2) {
+	public void compareCards(Card card1, Card card2) {
 		if (card1.getTitle() == card2.getTitle()) {
 			match = true;
 		} else {
@@ -95,8 +103,9 @@ public class MemoryGame {
 		
 		// Ask if user wants to play again.
 		// playAgain = userInput(); <- Need to get user input for this
-		
+		playAgain = false;//testing
 		if (playAgain) {
+		
 		// String themeSelection = userInput(); <- Need to get user input for this
 		// String mode = userInput(); <- Need to get user input for this
 		// newGame(themeSelection, mode);
@@ -108,14 +117,36 @@ public class MemoryGame {
 	}
 	
 	// Resets all the important stuff.
-	private void newGame(String themeSelection, String mode) {
+	public void newGame(String themeSelection, String mode) {
 		theme = themeSelection;
 		difficulty = mode;
 		Deck deckObject = new Deck(theme, difficulty);
 		deck = deckObject.createDeck();
 		//score = 0;
 		numGuesses = 0;
-
+		playAgain = true;
 	}
-
+	
+	// Getters
+	public ArrayList<Card> getGameDeck(){
+		return deck; 
+	}
+	public String getGameDifficulty() {
+		return difficulty;
+	}
+	public String getGameTheme() {
+		return theme;
+	}
+	public int getGameNumGuesses() {
+		return numGuesses;
+	}
+	public boolean getGameMatch() {
+		return match;
+	}
+	public boolean getGamePlayAgain() {
+		return playAgain;
+	}
+	public Stats getGameStats() {
+		return stats;
+	}
 }
