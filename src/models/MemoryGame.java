@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class MemoryGame {
-
+	private String userName;
 	private ArrayList<Card> deck;
 	private String difficulty;
 	private String theme;
