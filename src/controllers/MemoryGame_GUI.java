@@ -1,5 +1,7 @@
 package controllers;
 
+import java.nio.file.Paths;
+
 /**
  
  */
@@ -7,6 +9,9 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -44,7 +49,7 @@ public class MemoryGame_GUI extends Application {
     }
 
     private void switchToThemeScene() {
-        if (themeScene == null) { // Only create the scene if it hasn't been created yet
+        if (themeScene == null) { // create the scene if it hasn't been created yet
             setupThemeScene();
         }
         mainStage.setScene(themeScene);
@@ -58,25 +63,53 @@ public class MemoryGame_GUI extends Application {
         Text chooseThemeText = new Text("Choose the Theme:");
         chooseThemeText.setFont(new Font("Arial", 24));
 
-        Button theme1 = new Button("Theme 1");
+        // HBox for buttons
+        HBox buttonBox = new HBox(10);  
+        buttonBox.setAlignment(Pos.CENTER);
+
+        // button for Theme 1
+        String earthImagePath = "file:earth_1.png";
+        printImagePath(earthImagePath);
+        ImageView earthView = new ImageView(new Image(earthImagePath));
+        earthView.setFitHeight(50);
+        earthView.setFitWidth(50); 
+        Button theme1 = new Button("Planets", earthView);
         theme1.setFont(new Font("Arial", 16));
-        Button theme2 = new Button("Theme 2");
+
+        // button for Theme 2 (Cats)
+        String catImagePath = "file:graycat.png";
+        printImagePath(catImagePath);
+        ImageView catView = new ImageView(new Image(catImagePath));
+        catView.setFitHeight(50); 
+        catView.setFitWidth(50); 
+        Button theme2 = new Button("Cats", catView);
         theme2.setFont(new Font("Arial", 16));
-        Button theme3 = new Button("Theme 3");
+
+        // Placeholder for Theme 3
+        Button theme3 = new Button("Theme 3 (Coming Soon)");
         theme3.setFont(new Font("Arial", 16));
+
+        // Adding buttons to the HBox
+        buttonBox.getChildren().addAll(theme1, theme2, theme3);
 
         // Placeholders for loading each theme
         theme1.setOnAction(e -> loadTheme(1));
         theme2.setOnAction(e -> loadTheme(2));
-        theme3.setOnAction(e -> loadTheme(3));
+        theme3.setOnAction(e -> {}); // No action for the third button yet
 
-        layout.getChildren().addAll(chooseThemeText, theme1, theme2, theme3);
+        // Add the HBox to the main VBox
+        layout.getChildren().addAll(chooseThemeText, buttonBox);
         themeScene = new Scene(layout, 800, 600);
+    }
+
+    private void printImagePath(String imagePath) {
+        String path = Paths.get(imagePath.replace("file:", "")).toAbsolutePath().toString();
+        System.out.println("Looking for image at: " + path);
     }
 
     private void loadTheme(int themeNumber) {
         System.out.println("Loading Theme " + themeNumber);
-        // Add your theme loading logic here
+        // theme loading yet to implement
     }
 
     public static void main(String[] args) {
