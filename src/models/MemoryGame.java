@@ -25,7 +25,7 @@ public class MemoryGame {
 		stats = new Stats();
 	}
 
-	public void playGame() {
+	public void playGame() { 
 		
 		while (playAgain) {
 			System.out.println("Started");
@@ -80,7 +80,7 @@ public class MemoryGame {
 
 	// This method sets match to true if the cards have the same title.
 	// If they don't, match is set to false.
-	public void compareCards(Card card1, Card card2) {
+	public void compareCards(Card card1, Card card2) { //public for testing
 		if (card1.getTitle() == card2.getTitle()) {
 			match = true;
 		} else {
