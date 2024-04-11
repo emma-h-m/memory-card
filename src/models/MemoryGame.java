@@ -28,7 +28,7 @@ public class MemoryGame {
 	public void playGame() {
 		
 		while (playAgain) {
-			
+			System.out.println("Started");
 			// Shuffle the deck
 			//Collections.shuffle(deck);
 
