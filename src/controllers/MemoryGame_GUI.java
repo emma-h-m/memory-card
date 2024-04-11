@@ -64,48 +64,48 @@ public class MemoryGame_GUI extends Application {
         chooseThemeText.setFont(new Font("Arial", 24));
 
         // HBox for buttons
-        HBox buttonBox = new HBox(10);  
+        HBox buttonBox = new HBox(20);  // Increased space between buttons
         buttonBox.setAlignment(Pos.CENTER);
 
-        // button for Theme 1
-        String earthImagePath = "file:earth_1.png";
-        printImagePath(earthImagePath);
-        ImageView earthView = new ImageView(new Image(earthImagePath));
-        earthView.setFitHeight(50);
-        earthView.setFitWidth(50); 
-        Button theme1 = new Button("Planets", earthView);
-        theme1.setFont(new Font("Arial", 16));
+        // Button for Theme 1 (Earth)
+        ImageView earthView = new ImageView(new Image("file:earth_1.png"));
+        earthView.setFitHeight(150); // Increased size of the image
+        earthView.setFitWidth(150);
+        VBox earthBox = new VBox(5, earthView, new Text("Planets"));
+        earthBox.setAlignment(Pos.CENTER);
+        Button theme1 = new Button();
+        theme1.setGraphic(earthBox);
+        theme1.setStyle("-fx-padding: 10; -fx-border-color: black; -fx-border-width: 2;");
+        theme1.setFont(new Font("Arial", 24));
 
-        // button for Theme 2 (Cats)
-        String catImagePath = "file:graycat.png";
-        printImagePath(catImagePath);
-        ImageView catView = new ImageView(new Image(catImagePath));
-        catView.setFitHeight(50); 
-        catView.setFitWidth(50); 
-        Button theme2 = new Button("Cats", catView);
-        theme2.setFont(new Font("Arial", 16));
+        // Button for Theme 2 (Cats)
+        ImageView catView = new ImageView(new Image("file:graycat.png"));
+        catView.setFitHeight(150); // Increased size of the image
+        catView.setFitWidth(150);
+        VBox catBox = new VBox(5, catView, new Text("Cats"));
+        catBox.setAlignment(Pos.CENTER);
+        Button theme2 = new Button();
+        theme2.setGraphic(catBox);
+        theme2.setStyle("-fx-padding: 10; -fx-border-color: black; -fx-border-width: 2;");
+        theme2.setFont(new Font("Arial", 24));
 
         // Placeholder for Theme 3
         Button theme3 = new Button("Theme 3 (Coming Soon)");
         theme3.setFont(new Font("Arial", 16));
+        theme3.setStyle("-fx-padding: 10; -fx-border-color: black; -fx-border-width: 2;");
+        
+        theme1.setOnAction(e -> loadTheme(1));
+        theme2.setOnAction(e -> loadTheme(2));
+        theme3.setOnAction(e -> loadTheme(3));
 
         // Adding buttons to the HBox
         buttonBox.getChildren().addAll(theme1, theme2, theme3);
-
-        // Placeholders for loading each theme
-        theme1.setOnAction(e -> loadTheme(1));
-        theme2.setOnAction(e -> loadTheme(2));
-        theme3.setOnAction(e -> {}); // No action for the third button yet
 
         // Add the HBox to the main VBox
         layout.getChildren().addAll(chooseThemeText, buttonBox);
         themeScene = new Scene(layout, 800, 600);
     }
 
-    private void printImagePath(String imagePath) {
-        String path = Paths.get(imagePath.replace("file:", "")).toAbsolutePath().toString();
-        System.out.println("Looking for image at: " + path);
-    }
 
     private void loadTheme(int themeNumber) {
         System.out.println("Loading Theme " + themeNumber);
