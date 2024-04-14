@@ -68,8 +68,8 @@ public class MemoryGame_GUI extends Application {
         buttonBox.setAlignment(Pos.CENTER);
 
         // Button for Theme 1 (Earth)
-        ImageView earthView = new ImageView(new Image("file:earth_1.png"));
-        earthView.setFitHeight(150); // Increased size of the image
+        ImageView earthView = new ImageView(new Image("file:Documents/cardimages/spacecardback.png"));
+        earthView.setFitHeight(170); // Increased size of the image
         earthView.setFitWidth(150);
         VBox earthBox = new VBox(5, earthView, new Text("Planets"));
         earthBox.setAlignment(Pos.CENTER);
@@ -79,8 +79,8 @@ public class MemoryGame_GUI extends Application {
         theme1.setFont(new Font("Arial", 24));
 
         // Button for Theme 2 (Cats)
-        ImageView catView = new ImageView(new Image("file:graycat.png"));
-        catView.setFitHeight(150); // Increased size of the image
+        ImageView catView = new ImageView(new Image("file:Documents/cardimages/catcardback.png"));
+        catView.setFitHeight(170); // Increased size of the image
         catView.setFitWidth(150);
         VBox catBox = new VBox(5, catView, new Text("Cats"));
         catBox.setAlignment(Pos.CENTER);
@@ -89,10 +89,15 @@ public class MemoryGame_GUI extends Application {
         theme2.setStyle("-fx-padding: 10; -fx-border-color: black; -fx-border-width: 2;");
         theme2.setFont(new Font("Arial", 24));
 
-        // Placeholder for Theme 3
-        Button theme3 = new Button("Theme 3 (Coming Soon)");
-        theme3.setFont(new Font("Arial", 16));
+        ImageView carView = new ImageView(new Image("file:Documents/cardimages/carcardback.png"));
+        carView.setFitHeight(170); // Increased size of the image
+        carView.setFitWidth(150);
+        VBox carBox = new VBox(5, carView, new Text("Cars"));
+        carBox.setAlignment(Pos.CENTER);
+        Button theme3 = new Button();
+        theme3.setGraphic(carBox);
         theme3.setStyle("-fx-padding: 10; -fx-border-color: black; -fx-border-width: 2;");
+        theme3.setFont(new Font("Arial", 24));
         
         theme1.setOnAction(e -> loadTheme(1));
         theme2.setOnAction(e -> loadTheme(2));
