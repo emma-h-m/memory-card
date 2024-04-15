@@ -32,12 +32,7 @@ public class MemoryGame_GUI extends Application {
     private Scene difficultyScene;
     private Scene gameScene;
     private Stage mainStage;
-<<<<<<< HEAD
     private Deck deck;
-=======
-    private Scene difficultyScene;
-    private Scene gameScene;
->>>>>>> 820bb3a235d393403e7fd08c4926fd378670d1e6
 
     @Override
     public void start(Stage primaryStage) {
@@ -138,7 +133,7 @@ public class MemoryGame_GUI extends Application {
     
     private void switchToDifficultyScene(int themeNumber) {
         if (difficultyScene == null) { // create the scene if it hasn't been created yet
-            chooseDifficulty(themeNumber);
+            setupDifficultyScene();
         }
         mainStage.setScene(difficultyScene);
     }
@@ -158,8 +153,7 @@ public class MemoryGame_GUI extends Application {
         hard.setStyle("-fx-background-color: #322947FF; -fx-text-fill: #1D1231FF; -fx-border-color: #1D1231FF; -fx-border-width: 2px;");
         easy.setOnAction(e -> switchToGameScene(themeNumber, "easy"));
         hard.setOnAction(e -> switchToGameScene(themeNumber, "hard"));
-
-<<<<<<< HEAD
+        
         layout.getChildren().addAll(easy, hard);
         difficultyScene = new Scene(layout, 800, 600);
     }
@@ -191,12 +185,6 @@ public class MemoryGame_GUI extends Application {
         for (Card card : shuffledDeck) {
         }
         gameScene = new Scene(layout, 800, 600);
-=======
-    private void loadTheme(int themeNumber) {
-        System.out.println("Loading Theme " + themeNumber);
-        setupDifficultyScene(); 
-        mainStage.setScene(difficultyScene);
->>>>>>> 820bb3a235d393403e7fd08c4926fd378670d1e6
     }
 
     private void setupDifficultyScene() {
