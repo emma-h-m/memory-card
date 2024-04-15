@@ -2,6 +2,7 @@ package controllers;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  
@@ -133,12 +134,12 @@ public class MemoryGame_GUI extends Application {
     
     private void switchToDifficultyScene(int themeNumber) {
         if (difficultyScene == null) { // create the scene if it hasn't been created yet
-            setupDifficultyScene();
+            setupDifficultyScene(themeNumber);
         }
         mainStage.setScene(difficultyScene);
     }
 
-    private void setupDifficultyScene() {
+    private void setupDifficultyScene(int themeNumber) {
         VBox layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
         layout.setStyle("-fx-background-color: #322947FF;");
@@ -148,22 +149,23 @@ public class MemoryGame_GUI extends Application {
         Button easyButton = new Button("Easy");
         easyButton.setFont(Font.font("Palatino", 24));
         easyButton.setStyle("-fx-background-color: #32CD32; -fx-text-fill: #0C1126FF;");
-        easyButton.setOnAction(e -> startGame(true));
+        easyButton.setOnAction(e -> startGame(true, themeNumber));
         Button hardButton = new Button("Hard");
         hardButton.setFont(Font.font("Palatino", 24));
         hardButton.setStyle("-fx-background-color: #FF6347; -fx-text-fill: #0C1126FF;");
-        hardButton.setOnAction(e -> startGame(false));
+        hardButton.setOnAction(e -> startGame(false, themeNumber));
         layout.getChildren().addAll(chooseDifficultyText, easyButton, hardButton);
         difficultyScene = new Scene(layout, 800, 600);
     }
     
-    private void startGame(boolean isEasy) {
-        int cardCount = isEasy ? 6 : 12;
-        setupGameScene(cardCount);
+    private void startGame(boolean isEasy, int themeNumber) {
+    	int cardCount = isEasy ? 6 : 12;
+    	String difficulty = isEasy ? "easy" : "hard";
+		setupGameScene(cardCount, themeNumber, difficulty);
         mainStage.setScene(gameScene);
     }
     
-    private void setupGameScene(int cardCount) {
+    private void setupGameScene(int cardCount, int themeNumber, String difficulty) {
         VBox layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
         layout.setStyle("-fx-background-color: #322947FF;");
@@ -175,16 +177,31 @@ public class MemoryGame_GUI extends Application {
         scrollPane.setPrefHeight(400);  
         scrollPane.setStyle("-fx-background: #322947FF; -fx-background-color: #322947FF;");
         GridPane cardGrid = new GridPane();
-        cardGrid.setHgap(10);
-        cardGrid.setVgap(10);
+        int gap = cardCount == 6 ? 20 : 10;
+        int Vgap = cardCount == 6 ? 35 : 10;
+        cardGrid.setHgap(Vgap);
+        cardGrid.setVgap(gap);
         cardGrid.setAlignment(Pos.CENTER);
+        
+        // create the deck and lay out the cards? should we do this here......
+        deck = new Deck(themeNumber == 1 ? "space" : (themeNumber == 2 ? "cat" : "car"), difficulty);
+        ArrayList<Card> shuffledDeck = deck.createDeck(); // Create and shuffle the deck
+        Collections.shuffle(shuffledDeck);
+        
         int cardsPerColumn = cardCount == 6 ? 2 : 2;
         for (int i = 0; i < cardCount; i++) {
-            Button card = new Button("Card " + (i + 1));
-            card.setPrefSize(90, 140);  
+        	String cardBackImage = themeNumber == 1 ? "spacecardback.png" : (themeNumber == 2 ? "catcardback.png" : "carcardback.png");
+            ImageView imageView = new ImageView(new Image("file:Documents/cardimages/" + cardBackImage));
+            imageView.setFitWidth(100);
+            imageView.setFitHeight(140);
+        	
+            Button cardButton = new Button();
+            cardButton.setGraphic(imageView);
+            cardButton.setStyle("-fx-background-color: #322947FF;");
+            
             int column = i / cardsPerColumn;
             int row = i % cardsPerColumn;
-            cardGrid.add(card, column, row);
+            cardGrid.add(cardButton, column, row);
         }
         scrollPane.setContent(cardGrid);
         layout.getChildren().addAll(gameInfoText, scrollPane);
