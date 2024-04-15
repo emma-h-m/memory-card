@@ -11,8 +11,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -30,7 +32,12 @@ public class MemoryGame_GUI extends Application {
     private Scene difficultyScene;
     private Scene gameScene;
     private Stage mainStage;
+<<<<<<< HEAD
     private Deck deck;
+=======
+    private Scene difficultyScene;
+    private Scene gameScene;
+>>>>>>> 820bb3a235d393403e7fd08c4926fd378670d1e6
 
     @Override
     public void start(Stage primaryStage) {
@@ -108,7 +115,7 @@ public class MemoryGame_GUI extends Application {
         theme2.setFont(new Font("Arial", 24));
 
         ImageView carView = new ImageView(new Image("file:Documents/cardimages/carcardback.png"));
-        carView.setFitHeight(170); // Increased size of the image
+        carView.setFitHeight(170); 
         carView.setFitWidth(150);
         VBox carBox = new VBox(5, carView, new Text("Cars"));
         carBox.setAlignment(Pos.CENTER);
@@ -152,6 +159,7 @@ public class MemoryGame_GUI extends Application {
         easy.setOnAction(e -> switchToGameScene(themeNumber, "easy"));
         hard.setOnAction(e -> switchToGameScene(themeNumber, "hard"));
 
+<<<<<<< HEAD
         layout.getChildren().addAll(easy, hard);
         difficultyScene = new Scene(layout, 800, 600);
     }
@@ -183,7 +191,67 @@ public class MemoryGame_GUI extends Application {
         for (Card card : shuffledDeck) {
         }
         gameScene = new Scene(layout, 800, 600);
+=======
+    private void loadTheme(int themeNumber) {
+        System.out.println("Loading Theme " + themeNumber);
+        setupDifficultyScene(); 
+        mainStage.setScene(difficultyScene);
+>>>>>>> 820bb3a235d393403e7fd08c4926fd378670d1e6
     }
+
+    private void setupDifficultyScene() {
+        VBox layout = new VBox(20);
+        layout.setAlignment(Pos.CENTER);
+        layout.setStyle("-fx-background-color: #322947FF;");
+        Text chooseDifficultyText = new Text("Choose the Difficulty:");
+        chooseDifficultyText.setFont(Font.font("Palatino", FontWeight.BOLD, 30));
+        chooseDifficultyText.setStyle("-fx-fill: #0C1126FF;");
+        Button easyButton = new Button("Easy");
+        easyButton.setFont(Font.font("Arial", 24));
+        easyButton.setStyle("-fx-background-color: #32CD32; -fx-text-fill: white;");
+        easyButton.setOnAction(e -> startGame(true));
+        Button hardButton = new Button("Hard");
+        hardButton.setFont(Font.font("Arial", 24));
+        hardButton.setStyle("-fx-background-color: #FF6347; -fx-text-fill: white;");
+        hardButton.setOnAction(e -> startGame(false));
+        layout.getChildren().addAll(chooseDifficultyText, easyButton, hardButton);
+        difficultyScene = new Scene(layout, 800, 600);
+    }
+    
+    private void startGame(boolean isEasy) {
+        int cardCount = isEasy ? 6 : 20;
+        setupGameScene(cardCount);
+        mainStage.setScene(gameScene);
+    }
+    
+    private void setupGameScene(int cardCount) {
+        VBox layout = new VBox(20);
+        layout.setAlignment(Pos.CENTER);
+        layout.setStyle("-fx-background-color: #322947FF;");
+        Text gameInfoText = new Text("You are playing " + (cardCount == 6 ? "Easy" : "Hard") + " mode.");
+        gameInfoText.setFont(Font.font("Palatino", FontWeight.BOLD, 20));
+        gameInfoText.setStyle("-fx-fill: #FFFFFF;");
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setFitToWidth(true);  
+        scrollPane.setPrefHeight(400);  
+        scrollPane.setStyle("-fx-background: #322947FF; -fx-background-color: #322947FF;");
+        GridPane cardGrid = new GridPane();
+        cardGrid.setHgap(10);
+        cardGrid.setVgap(10);
+        cardGrid.setAlignment(Pos.CENTER);
+        int cardsPerColumn = cardCount == 6 ? 2 : 5;
+        for (int i = 0; i < cardCount; i++) {
+            Button card = new Button("Card " + (i + 1));
+            card.setPrefSize(90, 140);  
+            int column = i / cardsPerColumn;
+            int row = i % cardsPerColumn;
+            cardGrid.add(card, column, row);
+        }
+        scrollPane.setContent(cardGrid);
+        layout.getChildren().addAll(gameInfoText, scrollPane);
+        gameScene = new Scene(layout, 800, 600);
+    }
+
 
     public static void main(String[] args) {
         launch(args);
