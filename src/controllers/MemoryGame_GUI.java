@@ -137,55 +137,6 @@ public class MemoryGame_GUI extends Application {
         }
         mainStage.setScene(difficultyScene);
     }
-    
-    private void chooseDifficulty(int themeNumber) {
-    	VBox layout = new VBox(20);
-        layout.setAlignment(Pos.CENTER);
-        layout.setStyle("-fx-background-color: #322947FF;");
-
-        Button easy = new Button("Easy");
-        Button hard = new Button("Hard");
-        easy.setPadding(new Insets(10, 7, 10, 7));
-        hard.setPadding(new Insets(10, 7, 10, 7));
-        easy.setFont(Font.font("Palatino", FontWeight.BOLD, 14));
-        hard.setFont(Font.font("Palatino", FontWeight.BOLD, 14));
-        easy.setStyle("-fx-background-color: #322947FF; -fx-text-fill: #1D1231FF; -fx-border-color: #1D1231FF; -fx-border-width: 2px;");
-        hard.setStyle("-fx-background-color: #322947FF; -fx-text-fill: #1D1231FF; -fx-border-color: #1D1231FF; -fx-border-width: 2px;");
-        easy.setOnAction(e -> switchToGameScene(themeNumber, "easy"));
-        hard.setOnAction(e -> switchToGameScene(themeNumber, "hard"));
-        
-        layout.getChildren().addAll(easy, hard);
-        difficultyScene = new Scene(layout, 800, 600);
-    }
-    
-    private void switchToGameScene(int themeNumber, String difficulty) {
-        if (gameScene == null) { // create the scene if it hasn't been created yet
-            loadTheme(themeNumber, difficulty);
-        }
-        mainStage.setScene(gameScene);
-    }
-
-    private void loadTheme(int themeNumber, String difficulty) {
-    	VBox layout = new VBox(20);
-        layout.setAlignment(Pos.CENTER);
-        layout.setStyle("-fx-background-color: #322947FF;");
-        
-        if (themeNumber == 1) {
-            deck = new Deck("space", difficulty);
-        } else if (themeNumber == 2) {
-            deck = new Deck("cat", difficulty);
-        } else if (themeNumber == 3) {
-            deck = new Deck("car", difficulty);
-        }
-        
-        ArrayList<Card> shuffledDeck = deck.createDeck();
-        deck.shuffle();
-
-        // Iterate over the shuffled deck to add ImageView for each card
-        for (Card card : shuffledDeck) {
-        }
-        gameScene = new Scene(layout, 800, 600);
-    }
 
     private void setupDifficultyScene() {
         VBox layout = new VBox(20);
@@ -195,19 +146,19 @@ public class MemoryGame_GUI extends Application {
         chooseDifficultyText.setFont(Font.font("Palatino", FontWeight.BOLD, 30));
         chooseDifficultyText.setStyle("-fx-fill: #0C1126FF;");
         Button easyButton = new Button("Easy");
-        easyButton.setFont(Font.font("Arial", 24));
-        easyButton.setStyle("-fx-background-color: #32CD32; -fx-text-fill: white;");
+        easyButton.setFont(Font.font("Palatino", 24));
+        easyButton.setStyle("-fx-background-color: #32CD32; -fx-text-fill: #0C1126FF;");
         easyButton.setOnAction(e -> startGame(true));
         Button hardButton = new Button("Hard");
-        hardButton.setFont(Font.font("Arial", 24));
-        hardButton.setStyle("-fx-background-color: #FF6347; -fx-text-fill: white;");
+        hardButton.setFont(Font.font("Palatino", 24));
+        hardButton.setStyle("-fx-background-color: #FF6347; -fx-text-fill: #0C1126FF;");
         hardButton.setOnAction(e -> startGame(false));
         layout.getChildren().addAll(chooseDifficultyText, easyButton, hardButton);
         difficultyScene = new Scene(layout, 800, 600);
     }
     
     private void startGame(boolean isEasy) {
-        int cardCount = isEasy ? 6 : 20;
+        int cardCount = isEasy ? 6 : 12;
         setupGameScene(cardCount);
         mainStage.setScene(gameScene);
     }
@@ -227,7 +178,7 @@ public class MemoryGame_GUI extends Application {
         cardGrid.setHgap(10);
         cardGrid.setVgap(10);
         cardGrid.setAlignment(Pos.CENTER);
-        int cardsPerColumn = cardCount == 6 ? 2 : 5;
+        int cardsPerColumn = cardCount == 6 ? 2 : 2;
         for (int i = 0; i < cardCount; i++) {
             Button card = new Button("Card " + (i + 1));
             card.setPrefSize(90, 140);  
