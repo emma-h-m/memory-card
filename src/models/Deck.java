@@ -1,6 +1,7 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Deck {
 
@@ -19,185 +20,109 @@ public class Deck {
 		if (theme == "cat") {
 			if (difficulty == "easy") {
 				// Easy decks have 6 cards (3 pairs).
-				deck.add(new Card("cat1", "cat1.png"));
-				deck.add(new Card("cat1", "cat1.png"));
+				deck.add(new Card("cat1", "blackcat.png"));
+				deck.add(new Card("cat1", "blackcat.png"));
 				
-				deck.add(new Card("cat2", "cat2.png"));
-				deck.add(new Card("cat2", "cat2.png"));
+				deck.add(new Card("cat2", "orangecat.png"));
+				deck.add(new Card("cat2", "orangecat.png"));
 				
-				deck.add(new Card("cat3", "cat3.png"));
-				deck.add(new Card("cat3", "cat3.png"));
-				
-				//deck.add(new Card("cat4", "cat4.png"));
-				//deck.add(new Card("cat4", "cat4.png"));
-				//
-				//deck.add(new Card("cat5", "cat5.png"));
-				//deck.add(new Card("cat5", "cat5.png"));
-				//
-				//deck.add(new Card("cat6", "cat6.png"));
-				//deck.add(new Card("cat6", "cat6.png"));
+				deck.add(new Card("cat3", "simesecat.png"));
+				deck.add(new Card("cat3", "simesecat.png"));
 			} 
 			
 			else if (difficulty == "hard") {
 				// Hard decks have 12 cards (6 pairs).
-				deck.add(new Card("cat1", "cat1.png"));
-				deck.add(new Card("cat1", "cat1.png"));
+				deck.add(new Card("cat1", "blackcat.png"));
+				deck.add(new Card("cat1", "blackcat.png"));
 				
-				deck.add(new Card("cat2", "cat2.png"));
-				deck.add(new Card("cat2", "cat2.png"));
+				deck.add(new Card("cat2", "orangecat.png"));
+				deck.add(new Card("cat2", "orangecat.png"));
 				
-				deck.add(new Card("cat3", "cat3.png"));
-				deck.add(new Card("cat3", "cat3.png"));
+				deck.add(new Card("cat3", "simesecat.png"));
+				deck.add(new Card("cat3", "simesecat.png"));
 				
-				deck.add(new Card("cat4", "cat4.png"));
-				deck.add(new Card("cat4", "cat4.png"));
+				deck.add(new Card("cat4", "graycat.png"));
+				deck.add(new Card("cat4", "graycat.png"));
 				
-				deck.add(new Card("cat5", "cat5.png"));
-				deck.add(new Card("cat5", "cat5.png"));
+				deck.add(new Card("cat5", "calicocat.png"));
+				deck.add(new Card("cat5", "calicocat.png"));
 				
-				deck.add(new Card("cat6", "cat6.png"));
-				deck.add(new Card("cat6", "cat6.png"));
-				
-				//deck.add(new Card("cat7", "cat7.png"));
-				//deck.add(new Card("cat7", "cat7.png"));
-				//
-				//deck.add(new Card("cat8", "cat8.png"));
-				//deck.add(new Card("cat8", "cat8.png"));
-				//
-				//deck.add(new Card("cat9", "cat9.png"));
-				//deck.add(new Card("cat9", "cat9.png"));
-				//
-				//deck.add(new Card("cat10", "cat10.png"));
-				//deck.add(new Card("cat10", "cat10.png"));
-				//
-				//deck.add(new Card("cat11", "cat11.png"));
-				//deck.add(new Card("cat11", "cat11.png"));
-				//
-				//deck.add(new Card("cat12", "cat12.png"));
-				//deck.add(new Card("cat12", "cat12.png"));
+				deck.add(new Card("cat6", "whitegray.png"));
+				deck.add(new Card("cat6", "whitegray.png"));
 			}
 		}
 
 		else if (theme == "car") {
 			if (difficulty == "easy") {
-				deck.add(new Card("car1", "car1.png"));
-				deck.add(new Card("car1", "car1.png"));
+				deck.add(new Card("car1", "charger.png"));
+				deck.add(new Card("car1", "charger.png"));
 				
-				deck.add(new Card("car2", "car2.png"));
-				deck.add(new Card("car2", "car2.png"));
+				deck.add(new Card("car2", "mazda.png"));
+				deck.add(new Card("car2", "mazda.png"));
 				
-				deck.add(new Card("car3", "car3.png"));
-				deck.add(new Card("car3", "car3.png"));
-				
-				//deck.add(new Card("car4", "car4.png"));
-				//deck.add(new Card("car4", "car4.png"));
-				//
-				//deck.add(new Card("car5", "car5.png"));
-				//deck.add(new Card("car5", "car5.png"));
-				//
-				//deck.add(new Card("car6", "car6.png"));
-				//deck.add(new Card("car6", "car6.png"));
+				deck.add(new Card("car3", "orangesupra.png"));
+				deck.add(new Card("car3", "orangesupra.png"));
 			} 
 			
 			else if (difficulty == "hard") {
-				deck.add(new Card("car1", "car1.png"));
-				deck.add(new Card("car1", "car1.png"));
+				deck.add(new Card("car1", "charger.png"));
+				deck.add(new Card("car1", "charger.png"));
 				
-				deck.add(new Card("car2", "car2.png"));
-				deck.add(new Card("car2", "car2.png"));
+				deck.add(new Card("car2", "mazda.png"));
+				deck.add(new Card("car2", "mazda.png"));
 				
-				deck.add(new Card("car3", "car3.png"));
-				deck.add(new Card("car3", "car3.png"));
+				deck.add(new Card("car3", "orangesupra.png"));
+				deck.add(new Card("car3", "orangesupra.png"));
 				
-				deck.add(new Card("car4", "car4.png"));
-				deck.add(new Card("car4", "car4.png"));
+				deck.add(new Card("car4", "sukicar.png"));
+				deck.add(new Card("car4", "sukicar.png"));
 				
-				deck.add(new Card("car5", "car5.png"));
-				deck.add(new Card("car5", "car5.png"));
+				deck.add(new Card("car5", "fordescort.png"));
+				deck.add(new Card("car5", "fordescort.png"));
 				
-				deck.add(new Card("car6", "car6.png"));
-				deck.add(new Card("car6", "car6.png"));
-				
-				//deck.add(new Card("car7", "car7.png"));
-				//deck.add(new Card("car7", "car7.png"));
-				//
-				//deck.add(new Card("car8", "car8.png"));
-				//deck.add(new Card("car8", "car8.png"));
-				//
-				//deck.add(new Card("car9", "car9.png"));
-				//deck.add(new Card("car9", "car9.png"));
-				//
-				//deck.add(new Card("car10", "car10.png"));
-				//deck.add(new Card("car10", "car10.png"));
-				//
-				//deck.add(new Card("car11", "car11.png"));
-				//deck.add(new Card("car11", "car11.png"));
-				//
-				//deck.add(new Card("car12", "car12.png"));
-				//deck.add(new Card("car12", "car12.png"));
+				deck.add(new Card("car6", "stringray.png"));
+				deck.add(new Card("car6", "stingray.png"));
 			}
 		}
 		
-		else if (theme == "galaxy") {
+		else if (theme == "space") {
 			if (difficulty == "easy") {
-				deck.add(new Card("galaxy1", "galaxy1.png"));
-				deck.add(new Card("galaxy1", "galaxy1.png"));
+				deck.add(new Card("space1", "saturn.png"));
+				deck.add(new Card("space1", "saturn.png"));
 				
-				deck.add(new Card("galaxy2", "galaxy2.png"));
-				deck.add(new Card("galaxy2", "galaxy2.png"));
+				deck.add(new Card("space2", "earth_1.png"));
+				deck.add(new Card("space2", "earth_1.png"));
 				
-				deck.add(new Card("galaxy3", "galaxy3.png"));
-				deck.add(new Card("galaxy3", "galaxy3.png"));
-				
-				//deck.add(new Card("galaxy4", "galaxy4.png"));
-				//deck.add(new Card("galaxy4", "galaxy4.png"));
-				//
-				//deck.add(new Card("galaxy5", "galaxy5.png"));
-				//deck.add(new Card("galaxy5", "galaxy5.png"));
-				//
-				//deck.add(new Card("galaxy6", "galaxy6.png"));
-				//deck.add(new Card("galaxy6", "galaxy6.png"));
+				deck.add(new Card("space3", "sun.png"));
+				deck.add(new Card("space3", "sun.png"));
 			} 
 			
 			else if (difficulty == "hard") {
-				deck.add(new Card("galaxy1", "galaxy1.png"));
-				deck.add(new Card("galaxy1", "galaxy1.png"));
+				deck.add(new Card("space1", "saturn.png"));
+				deck.add(new Card("space1", "saturn.png"));
 				
-				deck.add(new Card("galaxy2", "galaxy2.png"));
-				deck.add(new Card("galaxy2", "galaxy2.png"));
+				deck.add(new Card("space2", "earth_1.png"));
+				deck.add(new Card("space2", "earth_1.png"));
 				
-				deck.add(new Card("galaxy3", "galaxy3.png"));
-				deck.add(new Card("galaxy3", "galaxy3.png"));
+				deck.add(new Card("space3", "sun.png"));
+				deck.add(new Card("space3", "sun.png"));
 				
-				deck.add(new Card("galaxy4", "galaxy4.png"));
-				deck.add(new Card("galaxy4", "galaxy4.png"));
+				deck.add(new Card("space4", "moon.png"));
+				deck.add(new Card("space4", "moon.png"));
 				
-				deck.add(new Card("galaxy5", "galaxy5.png"));
-				deck.add(new Card("galaxy5", "galaxy5.png"));
+				deck.add(new Card("space5", "jupiter.png"));
+				deck.add(new Card("space5", "jupiter.png"));
 				
-				deck.add(new Card("galaxy6", "galaxy6.png"));
-				deck.add(new Card("galaxy6", "galaxy6.png"));
-				
-				//deck.add(new Card("galaxy7", "galaxy7.png"));
-				//deck.add(new Card("galaxy7", "galaxy7.png"));
-				//
-				//deck.add(new Card("galaxy8", "galaxy8.png"));
-				//deck.add(new Card("galaxy8", "galaxy8.png"));
-				//
-				//deck.add(new Card("galaxy9", "galaxy9.png"));
-				//deck.add(new Card("galaxy9", "galaxy9.png"));
-				//
-				//deck.add(new Card("galaxy10", "galaxy10.png"));
-				//deck.add(new Card("galaxy10", "galaxy10.png"));
-				//
-				//deck.add(new Card("galaxy11", "galaxy11.png"));
-				//deck.add(new Card("galaxy11", "galaxy11.png"));
-				//
-				//deck.add(new Card("galaxy12", "galaxy12.png"));
-				//deck.add(new Card("galaxy12", "galaxy12.png"));
+				deck.add(new Card("space6", "venus.png"));
+				deck.add(new Card("space6", "venus.png"));
 			}
 		}
 		return deck;
 	}// end createDeck
+	
+	// Method to shuffle the deck
+    public void shuffle() {
+        Collections.shuffle(deck);
+    }
 
 }

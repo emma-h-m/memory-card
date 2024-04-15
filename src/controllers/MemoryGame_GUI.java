@@ -1,6 +1,7 @@
 package controllers;
 
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 /**
  
@@ -19,12 +20,17 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import models.Card;
+import models.Deck;
 
 public class MemoryGame_GUI extends Application {
 
     private Scene mainScene;
     private Scene themeScene;
+    private Scene difficultyScene;
+    private Scene gameScene;
     private Stage mainStage;
+    private Deck deck;
 
     @Override
     public void start(Stage primaryStage) {
@@ -83,7 +89,7 @@ public class MemoryGame_GUI extends Application {
         ImageView earthView = new ImageView(new Image("file:Documents/cardimages/spacecardback.png"));
         earthView.setFitHeight(170); // Increased size of the image
         earthView.setFitWidth(150);
-        VBox earthBox = new VBox(5, earthView, new Text("Planets"));
+        VBox earthBox = new VBox(5, earthView, new Text("Space"));
         earthBox.setAlignment(Pos.CENTER);
         Button theme1 = new Button();
         theme1.setGraphic(earthBox);
@@ -111,9 +117,9 @@ public class MemoryGame_GUI extends Application {
         theme3.setStyle("-fx-background-color: #322947FF; -fx-text-fill: #0C1126FF; -fx-padding: 10; -fx-border-color: #0C1126FF; -fx-border-width: 2;");
         theme3.setFont(new Font("Arial", 24));
         
-        theme1.setOnAction(e -> loadTheme(1));
-        theme2.setOnAction(e -> loadTheme(2));
-        theme3.setOnAction(e -> loadTheme(3));
+        theme1.setOnAction(e -> switchToDifficultyScene(1));
+        theme2.setOnAction(e -> switchToDifficultyScene(2));
+        theme3.setOnAction(e -> switchToDifficultyScene(3));
 
         // Adding buttons to the HBox
         buttonBox.getChildren().addAll(theme1, theme2, theme3);
@@ -122,11 +128,61 @@ public class MemoryGame_GUI extends Application {
         layout.getChildren().addAll(chooseThemeText, buttonBox);
         themeScene = new Scene(layout, 800, 600);
     }
+    
+    private void switchToDifficultyScene(int themeNumber) {
+        if (difficultyScene == null) { // create the scene if it hasn't been created yet
+            chooseDifficulty(themeNumber);
+        }
+        mainStage.setScene(difficultyScene);
+    }
+    
+    private void chooseDifficulty(int themeNumber) {
+    	VBox layout = new VBox(20);
+        layout.setAlignment(Pos.CENTER);
+        layout.setStyle("-fx-background-color: #322947FF;");
 
+        Button easy = new Button("Easy");
+        Button hard = new Button("Hard");
+        easy.setPadding(new Insets(10, 7, 10, 7));
+        hard.setPadding(new Insets(10, 7, 10, 7));
+        easy.setFont(Font.font("Palatino", FontWeight.BOLD, 14));
+        hard.setFont(Font.font("Palatino", FontWeight.BOLD, 14));
+        easy.setStyle("-fx-background-color: #322947FF; -fx-text-fill: #1D1231FF; -fx-border-color: #1D1231FF; -fx-border-width: 2px;");
+        hard.setStyle("-fx-background-color: #322947FF; -fx-text-fill: #1D1231FF; -fx-border-color: #1D1231FF; -fx-border-width: 2px;");
+        easy.setOnAction(e -> switchToGameScene(themeNumber, "easy"));
+        hard.setOnAction(e -> switchToGameScene(themeNumber, "hard"));
 
-    private void loadTheme(int themeNumber) {
-        System.out.println("Loading Theme " + themeNumber);
-        // theme loading yet to implement
+        layout.getChildren().addAll(easy, hard);
+        difficultyScene = new Scene(layout, 800, 600);
+    }
+    
+    private void switchToGameScene(int themeNumber, String difficulty) {
+        if (gameScene == null) { // create the scene if it hasn't been created yet
+            loadTheme(themeNumber, difficulty);
+        }
+        mainStage.setScene(gameScene);
+    }
+
+    private void loadTheme(int themeNumber, String difficulty) {
+    	VBox layout = new VBox(20);
+        layout.setAlignment(Pos.CENTER);
+        layout.setStyle("-fx-background-color: #322947FF;");
+        
+        if (themeNumber == 1) {
+            deck = new Deck("space", difficulty);
+        } else if (themeNumber == 2) {
+            deck = new Deck("cat", difficulty);
+        } else if (themeNumber == 3) {
+            deck = new Deck("car", difficulty);
+        }
+        
+        ArrayList<Card> shuffledDeck = deck.createDeck();
+        deck.shuffle();
+
+        // Iterate over the shuffled deck to add ImageView for each card
+        for (Card card : shuffledDeck) {
+        }
+        gameScene = new Scene(layout, 800, 600);
     }
 
     public static void main(String[] args) {
