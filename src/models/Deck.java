@@ -47,8 +47,8 @@ public class Deck {
 				deck.add(new Card("cat5", "calicocat.png"));
 				deck.add(new Card("cat5", "calicocat.png"));
 				
-				deck.add(new Card("cat6", "whitegray.png"));
-				deck.add(new Card("cat6", "whitegray.png"));
+				deck.add(new Card("cat6", "whitegraycat.png"));
+				deck.add(new Card("cat6", "whitegraycat.png"));
 			}
 		}
 
@@ -80,7 +80,7 @@ public class Deck {
 				deck.add(new Card("car5", "fordescort.png"));
 				deck.add(new Card("car5", "fordescort.png"));
 				
-				deck.add(new Card("car6", "stringray.png"));
+				deck.add(new Card("car6", "stingray.png"));
 				deck.add(new Card("car6", "stingray.png"));
 			}
 		}
