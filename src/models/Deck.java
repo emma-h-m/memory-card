@@ -26,8 +26,8 @@ public class Deck {
 				deck.add(new Card("cat2", "orangecat.png"));
 				deck.add(new Card("cat2", "orangecat.png"));
 				
-				deck.add(new Card("cat3", "simesecat.png"));
-				deck.add(new Card("cat3", "simesecat.png"));
+				deck.add(new Card("cat3", "siamesecat.png"));
+				deck.add(new Card("cat3", "siamesecat.png"));
 			} 
 			
 			else if (difficulty == "hard") {
@@ -38,8 +38,8 @@ public class Deck {
 				deck.add(new Card("cat2", "orangecat.png"));
 				deck.add(new Card("cat2", "orangecat.png"));
 				
-				deck.add(new Card("cat3", "simesecat.png"));
-				deck.add(new Card("cat3", "simesecat.png"));
+				deck.add(new Card("cat3", "siamesecat.png"));
+				deck.add(new Card("cat3", "siamesecat.png"));
 				
 				deck.add(new Card("cat4", "graycat.png"));
 				deck.add(new Card("cat4", "graycat.png"));
