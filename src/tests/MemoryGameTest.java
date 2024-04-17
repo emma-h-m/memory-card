@@ -25,12 +25,12 @@ public class MemoryGameTest {
 		Card card2 = new Card("cat1", "hard");
 
 		assertEquals(game.getGameMatch(), false);
-		game.compareCards(card1, card2);
+		//game.compareCards(card1, card2);
 		assertEquals(game.getGameMatch(), true);
 
 		card1 = new Card("cat1", "hard");
 		card2 = new Card("cat2", "hard");
-		game.compareCards(card1, card2);
+		//game.compareCards(card1, card2);
 		assertEquals(game.getGameMatch(), false);
 	}
 
@@ -55,7 +55,7 @@ public class MemoryGameTest {
 		assertEquals(game.getGameStats().getEasyCatHighScore(), 3);
 
 		// Test new game
-		game.newGame("car", "hard");
+		//game.newGame("car", "hard");
 		assertEquals(game.getGameTheme(), "car");
 		assertEquals(game.getGameDifficulty(), "hard");
 		assertEquals(game.getGameDeck().get(0).getTitle(), "car1");

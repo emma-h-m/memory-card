@@ -29,6 +29,10 @@ import javafx.util.Duration;
 import models.Card;
 import models.Deck;
 
+/**
+ * This class acts as the user interface for Memory Game. All of the
+ * neccessary user inputs are provided by this class. 
+ */
 public class MemoryGame_GUI extends Application {
 
 	private Scene mainScene;
@@ -261,7 +265,10 @@ public class MemoryGame_GUI extends Application {
 
 	    return firstHalf;
 	}
-
+	/**
+	 * The main method of the MemoryGame_GUI class.
+	 * @param args Needed to run the main method.
+	 */
 	public static void main(String[] args) {
 		launch(args);
 	}

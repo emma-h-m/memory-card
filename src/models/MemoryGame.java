@@ -3,6 +3,15 @@ package models;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * The MemoryGame class administrates Memory Game, a game where a number
+ * of cards are placed face down and the player flips two of the cards over
+ * in an attempt to find two cards that are the same. If the selected
+ * cards are the same, the two cards are removed. If the selected cards are not
+ * the same, the cards are flipped back over. The game ends when the player 
+ * finds all of the matching cards. This version of Memory Game supports
+ * three distinct themes of cards and two difficulties, easy and hard.
+ */
 public class MemoryGame {
 	private String userName;
 	private ArrayList<Card> deck;
@@ -15,8 +24,18 @@ public class MemoryGame {
 	private Stats stats;
 	
 	// Variables for testing
-	public Card card1, card2;
-
+	//public Card card1, card2;
+	
+	/**
+	 * The constructor for MemoryGame assigns values to the theme and
+	 * difficulty of the game. It creates and instantiates a Deck 
+	 * object with the appropriate theme and difficulty. It also creates a
+	 * Stats object for the game. 
+	 * 
+	 * 
+	 * @param themeSelection The user selected theme.
+	 * @param mode The user selected difficulty.
+	 */
 	public MemoryGame(String themeSelection, String mode) {
 		theme = themeSelection;
 		difficulty = mode;
@@ -24,13 +43,24 @@ public class MemoryGame {
 		deck = deckObject.createDeck();
 		stats = new Stats();
 	}
-
+	
+	/**
+	 * The playGame() method shuffles the deck of cards, and then
+	 * copmares the two cards selected by the user to determine if
+	 * they are a match. The cards are a match, they are removed from
+	 * the deck. This is repeated until the all of the cards are removed
+	 * from the deck. At that point, the statistics of the game will be
+	 * added to the Stats object and the user will be asked if they want
+	 * to play again. If the user chooses yes, then the user will prompted
+	 * to select a theme and a difficulty before beginning a new round.
+	 *  If the user chooses no, the game will end.
+	 */
 	public void playGame() { 
 		
 		while (playAgain) {
 			System.out.println("Started");
 			// Shuffle the deck
-			//Collections.shuffle(deck);
+			//deck.shuffle();
 
 			// Lay the cards out on the table.
 			// TBA (Maybe this happens in GUI?)
@@ -39,12 +69,12 @@ public class MemoryGame {
 			while (deck.size() > 0) {
 				int i = 0; //testing
 				// The player picks a card
-				//Card card1 = chooseCard();
-				card1 = deck.get(i);//testing
+				Card card1 = chooseCard();
+				//card1 = deck.get(i);//testing
 				
 				// The player picks another card
-				//Card card2 = chooseCard();
-				card2 = deck.get(i + 1);//testing
+				Card card2 = chooseCard();
+				//card2 = deck.get(i + 1);//testing
 	
 				// The game compares the cards
 				compareCards(card1, card2);
@@ -80,7 +110,7 @@ public class MemoryGame {
 
 	// This method sets match to true if the cards have the same title.
 	// If they don't, match is set to false.
-	public void compareCards(Card card1, Card card2) { //public for testing
+	private void compareCards(Card card1, Card card2) {
 		if (card1.getTitle() == card2.getTitle()) {
 			match = true;
 		} else {
@@ -117,7 +147,7 @@ public class MemoryGame {
 	}
 	
 	// Resets all the important stuff.
-	public void newGame(String themeSelection, String mode) {
+	private void newGame(String themeSelection, String mode) {
 		theme = themeSelection;
 		difficulty = mode;
 		Deck deckObject = new Deck(theme, difficulty);
@@ -128,24 +158,62 @@ public class MemoryGame {
 	}
 	
 	// Getters
+	/**
+	 * A getter method. 
+	 * @return Returns the deck as an Array List of Card objects.
+	 */
 	public ArrayList<Card> getGameDeck(){
 		return deck; 
 	}
+	
+	/**
+	 * A getter method.
+	 * @return Returns the difficulty of the game as a String.
+	 */
 	public String getGameDifficulty() {
 		return difficulty;
 	}
+	
+	/**
+	 * A getter method.
+	 * @return Returns the theme of the game as a String.
+	 */
 	public String getGameTheme() {
 		return theme;
 	}
+	
+	/**
+	 * A getter method.
+	 * @return Returns the number of guesses the player needed to
+	 * find all of the matching cards.
+	 */
 	public int getGameNumGuesses() {
 		return numGuesses;
 	}
+	
+	/**
+	 * A getter method. Only used for testing.
+	 * @return Returns the boolean variable "match", which is used
+	 * to help determine if two cards are a match.
+	 */
 	public boolean getGameMatch() {
 		return match;
 	}
+	
+	/**
+	 * A getter method. Only used for testing.
+	 * @return Returns the boolean variable playAgain, which is used
+	 * when determining if the player wants to play another round
+	 * of Memory Game.
+	 */
 	public boolean getGamePlayAgain() {
 		return playAgain;
 	}
+	
+	/**
+	 * A getter method.
+	 * @return Returns the Stats object associated with the current game.
+	 */
 	public Stats getGameStats() {
 		return stats;
 	}
