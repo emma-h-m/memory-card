@@ -49,6 +49,7 @@ public class MemoryGame_GUI extends Application {
 		mainStage.setTitle("Welcome to MemoryGame");
 		mainStage.setScene(mainScene);
 		mainStage.show();
+		mainStage.setResizable(false);
 	}
 
 	private void setupMainScene() {
@@ -76,6 +77,7 @@ public class MemoryGame_GUI extends Application {
 		root.getChildren().add(buttonContainer);
 		mainScene = new Scene(root, 800, 600);
 	}
+
 
 	private void switchToThemeScene() {
 		if (themeScene == null) { // create the scene if it hasn't been created yet
