@@ -61,6 +61,7 @@ public class MemoryGame_GUI extends Application {
 	private boolean flippedOver1, flippedOver2 = false;
 	private int numMatches = 0;
 	private Stats stats;
+	private Deck deck;
 	private boolean playAgain = false;
 
 	@Override
@@ -226,8 +227,10 @@ public class MemoryGame_GUI extends Application {
 		cardGrid.setVgap(gap);
 		cardGrid.setAlignment(Pos.CENTER);
 
-		// Lay out the cards.
-		ArrayList<Card> shuffledDeck = game.getGameDeck();
+		// Creat deck and lay out the cards.
+		deck = new Deck(themeNumber == 1 ? "space" : (themeNumber == 2 ? "cat" : "car"), difficulty);
+		ArrayList<Card> shuffledDeck = deck.createDeck(); // Create and shuffle the deck
+		Collections.shuffle(shuffledDeck);
 
 		int cardsPerColumn = cardCount == 6 ? 2 : 2;
 		for (int i = 0; i < cardCount; i++) {
@@ -252,12 +255,12 @@ public class MemoryGame_GUI extends Application {
 																					// Card
 			StackPane cardPane = new StackPane(imageView, cardFrontView);
 			cardButton.setGraphic(cardPane);
-			
+
 			cardButton.setOnAction(e -> {
 				if (numSel == 0) {
 
 					rotator.play();
-		
+
 					if (flippedOver1 == true) {
 						flippedOver1 = false;
 						return;
@@ -302,9 +305,9 @@ public class MemoryGame_GUI extends Application {
 							numSel = 4;
 							buttonArray.get(index1).fire();
 							buttonArray.get(index2).fire();
-							
+
 							game.incGuesses();
-							
+
 							numSel = 0;
 							flippedOver1 = false;
 							flippedOver2 = false;
@@ -314,9 +317,9 @@ public class MemoryGame_GUI extends Application {
 					} else { // It is a match
 						PauseTransition p1 = new PauseTransition(Duration.millis(1000));
 						p1.setOnFinished(event -> {
-							buttonArray.get(index1).setGraphic(cardFrontView); //<- Need to fix here
+							buttonArray.get(index1).setGraphic(cardFrontView); // <- Need to fix here
 							buttonArray.get(index1).setDisable(true);
-							buttonArray.get(index2).setGraphic(cardFrontView); //<- and here.
+							buttonArray.get(index2).setGraphic(cardFrontView); // <- and here.
 							buttonArray.get(index2).setDisable(true);
 
 							game.incGuesses();
@@ -326,40 +329,37 @@ public class MemoryGame_GUI extends Application {
 							numSel = 0;
 							flippedOver1 = false;
 							flippedOver2 = false;
-							
-							
+
 						});
 						p1.play();
-						
+
 						if (numMatches == 3 && difficulty.equals("easy")) {
 							System.out.println("Easy game won");
 							stats.addScore(theme, difficulty, game.getGameNumGuesses());
 							Alert choice = new Alert(AlertType.NONE);
 							choice.setHeaderText("Play again?");
 							choice.setContentText("Would you like to play again?");
-							
+
 							Optional<ButtonType> result = choice.showAndWait();
-							//If yes
+							// If yes
 							if (result.isPresent() && result.get() == ButtonType.OK) {
 								playAgain = true;
 							}
-							
-						}
-						else if (numMatches == 6 && difficulty.equals("hard")) {
+
+						} else if (numMatches == 6 && difficulty.equals("hard")) {
 							// The game is won
 						}
-						
+
 					}
 				}
-			}); //end of setOnAction
-			
+			}); // end of setOnAction
+
 			int column = i / cardsPerColumn;
 			int row = i % cardsPerColumn;
 			cardGrid.add(cardButton, column, row);
 			buttonArray.add(cardButton);
 		}
-		
-		
+
 		scrollPane.setContent(cardGrid);
 		layout.getChildren().addAll(gameInfoText, scrollPane);
 		gameScene = new Scene(layout, 800, 600);
@@ -394,7 +394,6 @@ public class MemoryGame_GUI extends Application {
 
 		return firstHalf;
 	}
-	
 
 	/**
 	 * The main method of the MemoryGame_GUI class.
