@@ -21,7 +21,7 @@ public class MemoryGame {
 	private int numGuesses = 0;
 	private boolean match = false;
 	private boolean playAgain = true;
-	private Stats stats;
+	
 	
 	// Variables for testing
 	//public Card card1, card2;
@@ -40,8 +40,9 @@ public class MemoryGame {
 		theme = themeSelection;
 		difficulty = mode;
 		Deck deckObject = new Deck(theme, difficulty);
-		deck = deckObject.createDeck();
-		stats = new Stats();
+		deckObject.createDeck();
+		deck = deckObject.getDeck();
+		
 	}
 	
 	/**
@@ -67,23 +68,23 @@ public class MemoryGame {
 
 			// Start the game.
 			while (deck.size() > 0) {
-				int i = 0; //testing
+				//int i = 0; //testing
 				// The player picks a card
-				Card card1 = chooseCard();
+				//Card card1 = chooseCard();
 				//card1 = deck.get(i);//testing
 				
 				// The player picks another card
-				Card card2 = chooseCard();
+				//Card card2 = chooseCard();
 				//card2 = deck.get(i + 1);//testing
 	
 				// The game compares the cards
-				compareCards(card1, card2);
+				//compareCards(card1, card2);
 
 				// If it's a match, increase the score and remove the cards from the deck.
 				if (match) {
 					//score++;
-					deck.remove(card1);
-					deck.remove(card2);
+					//deck.remove(card1);
+					//deck.remove(card2);
 				}
 				// else {do nothing?}
 
@@ -97,24 +98,24 @@ public class MemoryGame {
 			
 		}
 	}
+	
+	public void incGuesses() {
+		numGuesses++;
+	}
 
 	// Returns the card that user selected
-	private Card chooseCard() {
+	public Card chooseCard(Card userCard) {
 		
-		// return userSelectedCard();
-		
-		// Placeholder code
-		Card card = new Card("", ""); 
-		return card;
+		return userCard;
 	}
 
 	// This method sets match to true if the cards have the same title.
 	// If they don't, match is set to false.
-	private void compareCards(Card card1, Card card2) {
+	public boolean compareCards(Card card1, Card card2) {
 		if (card1.getTitle() == card2.getTitle()) {
-			match = true;
+			return true;
 		} else {
-			match = false;
+			return false;
 		}
 	} // Note: We need to make sure the user can't select the same card twice.
 	  // We can do that by disabling the first selection in the GUI, or we can
@@ -129,7 +130,7 @@ public class MemoryGame {
 	 */
 	private void endGame() {
 		// Add score/numGuesses to Stats object
-		stats.addScore(theme, difficulty, numGuesses); 
+		//stats.addScore(theme, difficulty, numGuesses); 
 		
 		// Ask if user wants to play again.
 		// playAgain = userInput(); <- Need to get user input for this
@@ -151,7 +152,8 @@ public class MemoryGame {
 		theme = themeSelection;
 		difficulty = mode;
 		Deck deckObject = new Deck(theme, difficulty);
-		deck = deckObject.createDeck();
+		deckObject.createDeck();
+		deck = deckObject.getDeck();
 		//score = 0;
 		numGuesses = 0;
 		playAgain = true;
@@ -210,11 +212,4 @@ public class MemoryGame {
 		return playAgain;
 	}
 	
-	/**
-	 * A getter method.
-	 * @return Returns the Stats object associated with the current game.
-	 */
-	public Stats getGameStats() {
-		return stats;
-	}
 }

@@ -37,7 +37,7 @@ public class Deck {
 	 * 
 	 * @return An Array List of Card objects. 
 	 */
-	public ArrayList<Card> createDeck() {
+	public void createDeck() {
 
 		if (theme == "cat") {
 			if (difficulty == "easy") {
@@ -139,7 +139,7 @@ public class Deck {
 				deck.add(new Card("space6", "venus.png"));
 			}
 		}
-		return deck;
+		
 	}// end createDeck
 	
 	// Method to shuffle the deck
@@ -151,6 +151,10 @@ public class Deck {
 	 */
     public void shuffle() {
         Collections.shuffle(deck);
+    }
+    
+    public ArrayList<Card> getDeck() {
+    	return deck;
     }
 
 }

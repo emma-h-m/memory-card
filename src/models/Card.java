@@ -11,6 +11,7 @@ public class Card {
 	private String title;
 	private String path;
 	
+	
 	/**
 	 * The constructor for the Card class assigns a value
 	 * to the variables "title" and "path" based on the
@@ -22,9 +23,8 @@ public class Card {
 	 */
 	public Card(String description, String filePath){
 		title = description;
-		path = filePath;	
+		path = filePath;
 	}
-	
 	
 	//Getters
 	/**

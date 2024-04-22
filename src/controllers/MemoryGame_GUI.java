@@ -2,17 +2,25 @@ package controllers;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Optional;
 
 import javafx.animation.Interpolator;
+import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 /**
  
  */
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -28,10 +36,12 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import models.Card;
 import models.Deck;
+import models.MemoryGame;
+import models.Stats;
 
 /**
- * This class acts as the user interface for Memory Game. All of the
- * neccessary user inputs are provided by this class. 
+ * This class acts as the user interface for Memory Game. All of the neccessary
+ * user inputs are provided by this class.
  */
 public class MemoryGame_GUI extends Application {
 
@@ -40,7 +50,18 @@ public class MemoryGame_GUI extends Application {
 	private Scene difficultyScene;
 	private Scene gameScene;
 	private Stage mainStage;
-	private Deck deck;
+
+	private MemoryGame game;
+	private String theme;
+	private Card card1, card2;
+	private int numSel = 0;
+	private boolean match = false;
+	private ArrayList<Button> buttonArray = new ArrayList<Button>();
+	private int index1, index2;
+	private boolean flippedOver1, flippedOver2 = false;
+	private int numMatches = 0;
+	private Stats stats;
+	private boolean playAgain = false;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -77,7 +98,6 @@ public class MemoryGame_GUI extends Application {
 		root.getChildren().add(buttonContainer);
 		mainScene = new Scene(root, 800, 600);
 	}
-
 
 	private void switchToThemeScene() {
 		if (themeScene == null) { // create the scene if it hasn't been created yet
@@ -180,98 +200,209 @@ public class MemoryGame_GUI extends Application {
 	}
 
 	private void setupGameScene(int cardCount, int themeNumber, String difficulty) {
+		if (themeNumber == 1)
+			theme = "space";
+		else if (themeNumber == 2)
+			theme = "cat";
+		else
+			theme = "car";
+		game = new MemoryGame(theme, difficulty);
+		stats = new Stats();
+
 		VBox layout = new VBox(20);
-	    layout.setAlignment(Pos.CENTER);
-	    layout.setStyle("-fx-background-color: #322947FF;");
-	    Text gameInfoText = new Text("You are playing " + (cardCount == 6 ? "Easy" : "Hard") + " mode.");
-	    gameInfoText.setFont(Font.font("Palatino", FontWeight.BOLD, 20));
-	    gameInfoText.setStyle("-fx-fill: #FFFFFF;");
-	    ScrollPane scrollPane = new ScrollPane();
-	    scrollPane.setFitToWidth(true);
-	    scrollPane.setPrefHeight(400);
-	    scrollPane.setStyle("-fx-background: #322947FF; -fx-background-color: #322947FF;");
-	    GridPane cardGrid = new GridPane();
-	    int gap = cardCount == 6 ? 20 : 10;
-	    int Vgap = cardCount == 6 ? 35 : 10;
-	    cardGrid.setHgap(Vgap);
-	    cardGrid.setVgap(gap);
-	    cardGrid.setAlignment(Pos.CENTER);
+		layout.setAlignment(Pos.CENTER);
+		layout.setStyle("-fx-background-color: #322947FF;");
+		Text gameInfoText = new Text("You are playing " + (cardCount == 6 ? "Easy" : "Hard") + " mode.");
+		gameInfoText.setFont(Font.font("Palatino", FontWeight.BOLD, 20));
+		gameInfoText.setStyle("-fx-fill: #FFFFFF;");
+		ScrollPane scrollPane = new ScrollPane();
+		scrollPane.setFitToWidth(true);
+		scrollPane.setPrefHeight(400);
+		scrollPane.setStyle("-fx-background: #322947FF; -fx-background-color: #322947FF;");
+		GridPane cardGrid = new GridPane();
+		int gap = cardCount == 6 ? 20 : 10;
+		int Vgap = cardCount == 6 ? 35 : 10;
+		cardGrid.setHgap(Vgap);
+		cardGrid.setVgap(gap);
+		cardGrid.setAlignment(Pos.CENTER);
 
-	    // create the deck and lay out the cards? should we do this here......
-	    deck = new Deck(themeNumber == 1 ? "space" : (themeNumber == 2 ? "cat" : "car"), difficulty);
-	    ArrayList<Card> shuffledDeck = deck.createDeck(); // Create and shuffle the deck
-	    Collections.shuffle(shuffledDeck);
+		// Lay out the cards.
+		ArrayList<Card> shuffledDeck = game.getGameDeck();
 
-	    int cardsPerColumn = cardCount == 6 ? 2 : 2;
-	    for (int i = 0; i < cardCount; i++) {
-	        String cardBackImage = themeNumber == 1 ? "spacecardback.png"
-	                : (themeNumber == 2 ? "catcardback.png" : "carcardback.png");
-	        ImageView imageView = new ImageView(new Image("file:Documents/cardimages/" + cardBackImage));
-	        imageView.setFitWidth(100);
-	        imageView.setFitHeight(140);
+		int cardsPerColumn = cardCount == 6 ? 2 : 2;
+		for (int i = 0; i < cardCount; i++) {
+			String cardBackImage = themeNumber == 1 ? "spacecardback.png"
+					: (themeNumber == 2 ? "catcardback.png" : "carcardback.png");
+			ImageView imageView = new ImageView(new Image("file:Documents/cardimages/" + cardBackImage));
+			imageView.setFitWidth(100);
+			imageView.setFitHeight(140);
 
-	        Button cardButton = new Button();
-	        cardButton.setGraphic(imageView);
-	        cardButton.setStyle("-fx-background-color: #322947FF;");
-	        Card card = shuffledDeck.get(i);
+			Button cardButton = new Button();
+			cardButton.setGraphic(imageView);
+			cardButton.setStyle("-fx-background-color: #322947FF;");
+			Card card = shuffledDeck.get(i);
 
-	        // Get the ImageView from the graphic of the button
-	        ImageView cardFrontView = new ImageView(new Image("file:Documents/cardimages/" + card.getPath()));
-	        cardFrontView.setFitWidth(100);
-	        cardFrontView.setFitHeight(140);
-	        cardFrontView.setVisible(false); // Initially hide the front of the card
+			// Get the ImageView from the graphic of the button
+			ImageView cardFrontView = new ImageView(new Image("file:Documents/cardimages/" + card.getPath()));
+			cardFrontView.setFitWidth(100);
+			cardFrontView.setFitHeight(140);
+			cardFrontView.setVisible(false); // Initially hide the front of the card
 
-	        RotateTransition rotator = createRotator(cardButton, cardFrontView); // Pass the Button and ImageView of the Card
-	        cardButton.setOnAction(e -> {
-	            rotator.play();
-	        });
+			RotateTransition rotator = createRotator(cardButton, cardFrontView); // Pass the Button and ImageView of the
+																					// Card
+			StackPane cardPane = new StackPane(imageView, cardFrontView);
+			cardButton.setGraphic(cardPane);
+			
+			cardButton.setOnAction(e -> {
+				if (numSel == 0) {
 
-	        StackPane cardPane = new StackPane(imageView, cardFrontView);
-	        cardButton.setGraphic(cardPane);
+					rotator.play();
+		
+					if (flippedOver1 == true) {
+						flippedOver1 = false;
+						return;
+					}
+					index1 = buttonArray.indexOf(cardButton);
 
-	        int column = i / cardsPerColumn;
-	        int row = i % cardsPerColumn;
-	        cardGrid.add(cardButton, column, row);
-	    }
-	    scrollPane.setContent(cardGrid);
-	    layout.getChildren().addAll(gameInfoText, scrollPane);
-	    gameScene = new Scene(layout, 800, 600);
+					card1 = shuffledDeck.get(index1);
+					numSel = 1;
+					flippedOver1 = true;
+
+				}
+
+				else if (numSel == 1) {
+
+					rotator.play();
+
+					if (flippedOver2 == true) {
+						flippedOver2 = false;
+						return;
+					}
+
+					index2 = buttonArray.indexOf(cardButton);
+
+					card2 = shuffledDeck.get(index2);
+					numSel = 2;
+					flippedOver2 = true;
+
+				}
+
+				else if (numSel == 4) { // This turns the selcted cards back over.
+					rotator.play();
+					return;
+				}
+
+				if (numSel == 2) {
+
+					match = game.compareCards(card1, card2);
+
+					if (match == false) {// If it's not a match
+						PauseTransition p = new PauseTransition(Duration.millis(1000));
+						p.setOnFinished(event -> {
+							numSel = 4;
+							buttonArray.get(index1).fire();
+							buttonArray.get(index2).fire();
+							
+							game.incGuesses();
+							
+							numSel = 0;
+							flippedOver1 = false;
+							flippedOver2 = false;
+						});
+						p.play();
+
+					} else { // It is a match
+						PauseTransition p1 = new PauseTransition(Duration.millis(1000));
+						p1.setOnFinished(event -> {
+							buttonArray.get(index1).setGraphic(cardFrontView); //<- Need to fix here
+							buttonArray.get(index1).setDisable(true);
+							buttonArray.get(index2).setGraphic(cardFrontView); //<- and here.
+							buttonArray.get(index2).setDisable(true);
+
+							game.incGuesses();
+							numMatches++;
+							System.out.println("Number of matches made: " + numMatches);
+
+							numSel = 0;
+							flippedOver1 = false;
+							flippedOver2 = false;
+							
+							
+						});
+						p1.play();
+						
+						if (numMatches == 3 && difficulty.equals("easy")) {
+							System.out.println("Easy game won");
+							stats.addScore(theme, difficulty, game.getGameNumGuesses());
+							Alert choice = new Alert(AlertType.NONE);
+							choice.setHeaderText("Play again?");
+							choice.setContentText("Would you like to play again?");
+							
+							Optional<ButtonType> result = choice.showAndWait();
+							//If yes
+							if (result.isPresent() && result.get() == ButtonType.OK) {
+								playAgain = true;
+							}
+							
+						}
+						else if (numMatches == 6 && difficulty.equals("hard")) {
+							// The game is won
+						}
+						
+					}
+				}
+			}); //end of setOnAction
+			
+			int column = i / cardsPerColumn;
+			int row = i % cardsPerColumn;
+			cardGrid.add(cardButton, column, row);
+			buttonArray.add(cardButton);
+		}
+		
+		
+		scrollPane.setContent(cardGrid);
+		layout.getChildren().addAll(gameInfoText, scrollPane);
+		gameScene = new Scene(layout, 800, 600);
 	}
 
 	private RotateTransition createRotator(Button cardButton, ImageView cardFrontView) {
 		// First half of the rotation (0 to 90 degrees)
-	    RotateTransition firstHalf = new RotateTransition(Duration.millis(500), cardButton);
-	    firstHalf.setAxis(Rotate.Y_AXIS);
-	    firstHalf.setFromAngle(0);
-	    firstHalf.setToAngle(90);
-	    firstHalf.setInterpolator(Interpolator.LINEAR);
+		RotateTransition firstHalf = new RotateTransition(Duration.millis(500), cardButton);
+		firstHalf.setAxis(Rotate.Y_AXIS);
+		firstHalf.setFromAngle(0);
+		firstHalf.setToAngle(90);
+		firstHalf.setInterpolator(Interpolator.LINEAR);
 
-	    // Second half of the rotation (90 to 180 degrees)
-	    RotateTransition secondHalf = new RotateTransition(Duration.millis(500), cardButton);
-	    secondHalf.setAxis(Rotate.Y_AXIS);
-	    secondHalf.setFromAngle(90);
-	    secondHalf.setToAngle(0);
-	    secondHalf.setInterpolator(Interpolator.LINEAR);
+		// Second half of the rotation (90 to 180 degrees)
+		RotateTransition secondHalf = new RotateTransition(Duration.millis(500), cardButton);
+		secondHalf.setAxis(Rotate.Y_AXIS);
+		secondHalf.setFromAngle(90);
+		secondHalf.setToAngle(0);
+		secondHalf.setInterpolator(Interpolator.LINEAR);
 
-	    // Toggle visibility of the card front when the first half of rotation finishes
-	    firstHalf.setOnFinished(e -> {
-	        cardFrontView.setVisible(!cardFrontView.isVisible());
-	        secondHalf.play(); // Start the second half of rotation
-	    });
+		// Toggle visibility of the card front when the first half of rotation finishes
+		firstHalf.setOnFinished(e -> {
+			cardFrontView.setVisible(!cardFrontView.isVisible());
+			secondHalf.play(); // Start the second half of rotation
+		});
 
-	    // Chain the second half of rotation to play after the first half
-	    firstHalf.setAutoReverse(false);
-	    firstHalf.setCycleCount(1);
-	    secondHalf.setAutoReverse(true);
-	    secondHalf.setCycleCount(1);
+		// Chain the second half of rotation to play after the first half
+		firstHalf.setAutoReverse(false);
+		firstHalf.setCycleCount(1);
+		secondHalf.setAutoReverse(true);
+		secondHalf.setCycleCount(1);
 
-	    return firstHalf;
+		return firstHalf;
 	}
+	
+
 	/**
 	 * The main method of the MemoryGame_GUI class.
+	 * 
 	 * @param args Needed to run the main method.
 	 */
 	public static void main(String[] args) {
 		launch(args);
 	}
+
 }
