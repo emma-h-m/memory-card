@@ -1,4 +1,5 @@
 package controllers;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
@@ -37,6 +38,7 @@ import models.Card;
 import models.Deck;
 import models.MemoryGame;
 import models.Stats;
+
 /**
  * This class acts as the user interface for Memory Game. All of the neccessary
  * user inputs are provided by this class.
@@ -70,6 +72,7 @@ public class MemoryGame_GUI extends Application {
 		mainStage.show();
 		mainStage.setResizable(false);
 	}
+
 	private void setupMainScene() {
 		VBox root = new VBox(20);
 		Image backgroundImage = new Image("file:Documents/cardimages/welcomescreen.png");
@@ -92,12 +95,14 @@ public class MemoryGame_GUI extends Application {
 		root.getChildren().add(buttonContainer);
 		mainScene = new Scene(root, 800, 600);
 	}
+
 	private void switchToThemeScene() {
 		if (themeScene == null) { // create the scene if it hasn't been created yet
 			setupThemeScene();
 		}
 		mainStage.setScene(themeScene);
 	}
+
 	private void setupThemeScene() {
 		VBox layout = new VBox(20);
 		layout.setAlignment(Pos.CENTER);
@@ -149,12 +154,14 @@ public class MemoryGame_GUI extends Application {
 		layout.getChildren().addAll(chooseThemeText, buttonBox);
 		themeScene = new Scene(layout, 800, 600);
 	}
+
 	private void switchToDifficultyScene(int themeNumber) {
 		if (difficultyScene == null) { // create the scene if it hasn't been created yet
 			setupDifficultyScene(themeNumber);
 		}
 		mainStage.setScene(difficultyScene);
 	}
+
 	private void setupDifficultyScene(int themeNumber) {
 		VBox layout = new VBox(20);
 		layout.setAlignment(Pos.CENTER);
@@ -173,12 +180,14 @@ public class MemoryGame_GUI extends Application {
 		layout.getChildren().addAll(chooseDifficultyText, easyButton, hardButton);
 		difficultyScene = new Scene(layout, 800, 600);
 	}
+
 	private void startGame(boolean isEasy, int themeNumber) {
 		int cardCount = isEasy ? 6 : 12;
 		String difficulty = isEasy ? "easy" : "hard";
 		setupGameScene(cardCount, themeNumber, difficulty);
 		mainStage.setScene(gameScene);
 	}
+
 	private void setupGameScene(int cardCount, int themeNumber, String difficulty) {
 		if (themeNumber == 1)
 			theme = "space";
@@ -230,131 +239,24 @@ public class MemoryGame_GUI extends Application {
 			cardButton.setGraphic(cardPane);
 
 			cardButton.setOnAction(e -> {
-				if (numSel == 0) {
-
+				if (!flippedOver2 && !cardButton.isDisabled()) { // Check if no animation is ongoing and the card is not
+																	// disabled
 					rotator.play();
 
-					if (flippedOver1 == true) {
-						flippedOver1 = false;
-						return;
+					if (numSel == 0) {
+						index1 = buttonArray.indexOf(cardButton);
+						card1 = shuffledDeck.get(index1);
+						flippedOver1 = true;
+					} else if (numSel == 1) {
+						index2 = buttonArray.indexOf(cardButton);
+						if (index1 == index2)
+							return; // Prevent matching the same card
+						card2 = shuffledDeck.get(index2);
+						flippedOver2 = true;
+						checkForMatch(); // Check for a match when the second card is flipped
 					}
-					index1 = buttonArray.indexOf(cardButton);
-
-					card1 = shuffledDeck.get(index1);
-					numSel = 1;
-					flippedOver1 = true;
-
+					numSel = (numSel + 1) % 2; // Toggles between 0 and 1 for selecting cards
 				}
-
-				else if (numSel == 1) {
-
-					rotator.play();
-
-					if (flippedOver2 == true) {
-						flippedOver2 = false;
-						return;
-					}
-
-					index2 = buttonArray.indexOf(cardButton);
-
-					card2 = shuffledDeck.get(index2);
-					numSel = 2;
-					flippedOver2 = true;
-
-				}
-
-				else if (numSel == 4) { // This turns the selcted cards back over.
-					rotator.play();
-					return;
-				}
-
-				if (numSel == 2) {
-
-					match = game.compareCards(card1, card2);
-
-					if (match == false) {// If it's not a match
-						PauseTransition p = new PauseTransition(Duration.millis(1000));
-						p.setOnFinished(event -> {
-							numSel = 4;
-							buttonArray.get(index1).fire();
-							buttonArray.get(index2).fire();
-
-							game.incGuesses();
-
-							numSel = 0;
-							flippedOver1 = false;
-							flippedOver2 = false;
-						});
-						p.play();
-
-					} else if (index1 == index2) {
-						// do nothing
-						numSel = 0;
-						flippedOver1 = false;
-						flippedOver2 = false;
-					} else if (match) { // It is a match
-						PauseTransition p1 = new PauseTransition(Duration.millis(1000));
-						p1.setOnFinished(event -> {
-							buttonArray.get(index1).setDisable(true);
-							buttonArray.get(index2).setDisable(true);
-
-							// Replace removed buttons with placeholders
-							Pane placeholder1 = new Pane();
-							placeholder1.setPrefSize(115, 142);
-							Pane placeholder2 = new Pane();
-							placeholder2.setPrefSize(115, 142);
-
-							cardGrid.getChildren().remove(buttonArray.get(index1));
-							cardGrid.add(placeholder1, GridPane.getColumnIndex(buttonArray.get(index1)),
-									GridPane.getRowIndex(buttonArray.get(index1)));
-							cardGrid.getChildren().remove(buttonArray.get(index2));
-							cardGrid.add(placeholder2, GridPane.getColumnIndex(buttonArray.get(index2)),
-									GridPane.getRowIndex(buttonArray.get(index2)));
-
-							game.incGuesses();
-							numMatches++;
-							System.out.println("Number of matches made: " + numMatches);
-
-							numSel = 0;
-							flippedOver1 = false;
-							flippedOver2 = false;
-
-							if (numMatches == 3 && difficulty.equals("easy")) {
-								System.out.println("Easy game won");
-								stats.addScore(theme, difficulty, game.getGameNumGuesses());
-								Alert choice = new Alert(AlertType.NONE);
-								choice.setHeaderText("Play again?");
-								choice.setContentText("Would you like to play again?");
-
-								Optional<ButtonType> result = choice.showAndWait();
-								// If yes
-								if (result.isPresent() && result.get() == ButtonType.OK) {
-									playAgain = true;
-								}
-							} else if (numMatches == 6 && difficulty.equals("hard")) {
-								// The game is won
-							}
-						});
-						p1.play();
-					}
-				}
-			}); // end of setOnAction
-			    if (!flippedOver2 && !cardButton.isDisabled()) {  // Check if no animation is ongoing and the card is not disabled
-			        rotator.play();
-
-			        if (numSel == 0) {
-			            index1 = buttonArray.indexOf(cardButton);
-			            card1 = shuffledDeck.get(index1);
-			            flippedOver1 = true;
-			        } else if (numSel == 1) {
-			            index2 = buttonArray.indexOf(cardButton);
-			            if (index1 == index2) return; // Prevent matching the same card
-			            card2 = shuffledDeck.get(index2);
-			            flippedOver2 = true;
-			            checkForMatch(); // Check for a match when the second card is flipped
-			        }
-			        numSel = (numSel + 1) % 2; // Toggles between 0 and 1 for selecting cards
-			    }
 			});
 
 			int column = i / cardsPerColumn;
@@ -368,45 +270,47 @@ public class MemoryGame_GUI extends Application {
 	}
 
 	private void checkForMatch() {
-	    if (game.compareCards(card1, card2)) {
-	        handleMatch(); // Handle match scenario
-	    } else {
-	        handleNoMatch(); // Handle no match scenario
-	    }
+		if (game.compareCards(card1, card2)) {
+			handleMatch(); // Handle match scenario
+		} else {
+			handleNoMatch(); // Handle no match scenario
+		}
 	}
 
 	private void handleMatch() {
-	    PauseTransition pause = new PauseTransition(Duration.seconds(1));
-	    pause.setOnFinished(event -> {
-	        buttonArray.get(index1).setDisable(true);
-	        buttonArray.get(index2).setDisable(true);
-	        resetCardState();
-	    });
-	    pause.play();
+		PauseTransition pause = new PauseTransition(Duration.seconds(1));
+		pause.setOnFinished(event -> {
+			buttonArray.get(index1).setDisable(true);
+			buttonArray.get(index2).setDisable(true);
+			resetCardState();
+		});
+		pause.play();
 	}
 
 	private void handleNoMatch() {
-	    PauseTransition pause = new PauseTransition(Duration.seconds(1));
-	    pause.setOnFinished(event -> {
-	        // Flip both cards back
-	        flipCardBack(index1);
-	        flipCardBack(index2);
-	        resetCardState();
-	    });
-	    pause.play();
+		PauseTransition pause = new PauseTransition(Duration.seconds(1));
+		pause.setOnFinished(event -> {
+			// Flip both cards back
+			flipCardBack(index1);
+			flipCardBack(index2);
+			resetCardState();
+		});
+		pause.play();
 	}
 
 	private void resetCardState() {
-	    numSel = 0;
-	    flippedOver1 = false;
-	    flippedOver2 = false;
+		numSel = 0;
+		flippedOver1 = false;
+		flippedOver2 = false;
 	}
 
 	private void flipCardBack(int index) {
-	    Button cardButton = buttonArray.get(index);
-	    RotateTransition rotator = createRotator(cardButton, (ImageView) ((StackPane) cardButton.getGraphic()).getChildren().get(1));
-	    rotator.play();
+		Button cardButton = buttonArray.get(index);
+		RotateTransition rotator = createRotator(cardButton,
+				(ImageView) ((StackPane) cardButton.getGraphic()).getChildren().get(1));
+		rotator.play();
 	}
+
 	private RotateTransition createRotator(Button cardButton, ImageView cardFrontView) {
 		// First half of the rotation (0 to 90 degrees)
 		RotateTransition firstHalf = new RotateTransition(Duration.millis(500), cardButton);
@@ -433,6 +337,7 @@ public class MemoryGame_GUI extends Application {
 		secondHalf.setCycleCount(1);
 		return firstHalf;
 	}
+
 	/**
 	 * The main method of the MemoryGame_GUI class.
 	 * 
