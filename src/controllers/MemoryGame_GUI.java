@@ -261,8 +261,6 @@ public class MemoryGame_GUI extends Application {
 			cardButton.setOnAction(e -> {
 			    if (!flippedOver2 && !cardButton.isDisabled()) {  // Check if no animation is ongoing and the card is not disabled
 			        rotator.play();
-
-<<<<<<< HEAD
 					rotator.play();
 
 					if (flippedOver1 == true) {
@@ -369,7 +367,6 @@ public class MemoryGame_GUI extends Application {
 					}
 				}
 			}); // end of setOnAction
-=======
 			        if (numSel == 0) {
 			            index1 = buttonArray.indexOf(cardButton);
 			            card1 = shuffledDeck.get(index1);
@@ -384,7 +381,6 @@ public class MemoryGame_GUI extends Application {
 			        numSel = (numSel + 1) % 2; // Toggles between 0 and 1 for selecting cards
 			    }
 			});
->>>>>>> 9e5eb0fb43fb54ab8393057e6327b27c0be7e290
 
 			int column = i / cardsPerColumn;
 			int row = i % cardsPerColumn;
