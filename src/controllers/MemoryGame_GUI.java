@@ -64,6 +64,7 @@ public class MemoryGame_GUI extends Application {
 	private Stats stats;
 	private Deck deck;
 	private boolean playAgain = false;
+	private boolean isAnimating = false;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -258,8 +259,10 @@ public class MemoryGame_GUI extends Application {
 			cardButton.setGraphic(cardPane);
 
 			cardButton.setOnAction(e -> {
-				if (numSel == 0) {
+			    if (!flippedOver2 && !cardButton.isDisabled()) {  // Check if no animation is ongoing and the card is not disabled
+			        rotator.play();
 
+<<<<<<< HEAD
 					rotator.play();
 
 					if (flippedOver1 == true) {
@@ -366,6 +369,22 @@ public class MemoryGame_GUI extends Application {
 					}
 				}
 			}); // end of setOnAction
+=======
+			        if (numSel == 0) {
+			            index1 = buttonArray.indexOf(cardButton);
+			            card1 = shuffledDeck.get(index1);
+			            flippedOver1 = true;
+			        } else if (numSel == 1) {
+			            index2 = buttonArray.indexOf(cardButton);
+			            if (index1 == index2) return; // Prevent matching the same card
+			            card2 = shuffledDeck.get(index2);
+			            flippedOver2 = true;
+			            checkForMatch(); // Check for a match when the second card is flipped
+			        }
+			        numSel = (numSel + 1) % 2; // Toggles between 0 and 1 for selecting cards
+			    }
+			});
+>>>>>>> 9e5eb0fb43fb54ab8393057e6327b27c0be7e290
 
 			int column = i / cardsPerColumn;
 			int row = i % cardsPerColumn;
@@ -378,6 +397,46 @@ public class MemoryGame_GUI extends Application {
 		gameScene = new Scene(layout, 800, 600);
 	}
 
+	private void checkForMatch() {
+	    if (game.compareCards(card1, card2)) {
+	        handleMatch(); // Handle match scenario
+	    } else {
+	        handleNoMatch(); // Handle no match scenario
+	    }
+	}
+
+	private void handleMatch() {
+	    PauseTransition pause = new PauseTransition(Duration.seconds(1));
+	    pause.setOnFinished(event -> {
+	        buttonArray.get(index1).setDisable(true);
+	        buttonArray.get(index2).setDisable(true);
+	        resetCardState();
+	    });
+	    pause.play();
+	}
+
+	private void handleNoMatch() {
+	    PauseTransition pause = new PauseTransition(Duration.seconds(1));
+	    pause.setOnFinished(event -> {
+	        // Flip both cards back
+	        flipCardBack(index1);
+	        flipCardBack(index2);
+	        resetCardState();
+	    });
+	    pause.play();
+	}
+
+	private void resetCardState() {
+	    numSel = 0;
+	    flippedOver1 = false;
+	    flippedOver2 = false;
+	}
+
+	private void flipCardBack(int index) {
+	    Button cardButton = buttonArray.get(index);
+	    RotateTransition rotator = createRotator(cardButton, (ImageView) ((StackPane) cardButton.getGraphic()).getChildren().get(1));
+	    rotator.play();
+	}
 	private RotateTransition createRotator(Button cardButton, ImageView cardFrontView) {
 		// First half of the rotation (0 to 90 degrees)
 		RotateTransition firstHalf = new RotateTransition(Duration.millis(500), cardButton);
@@ -398,7 +457,6 @@ public class MemoryGame_GUI extends Application {
 			cardFrontView.setVisible(!cardFrontView.isVisible());
 			secondHalf.play(); // Start the second half of rotation
 		});
-
 		// Chain the second half of rotation to play after the first half
 		firstHalf.setAutoReverse(false);
 		firstHalf.setCycleCount(1);
