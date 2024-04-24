@@ -66,6 +66,7 @@ public class MemoryGame_GUI extends Application {
 	private boolean playAgain = false;
 	private boolean isAnimating = false;
 	private GridPane cardGrid;
+	private String difficulty;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -318,6 +319,9 @@ public class MemoryGame_GUI extends Application {
 			numMatches++;
 			System.out.println("Number of matches made: " + numMatches);
 	        resetCardState();
+	        
+	     // Check the game state after each match
+	        checkGameState();
 	    });
 	    pause.play();
 	}
@@ -339,6 +343,23 @@ public class MemoryGame_GUI extends Application {
 	    flippedOver1 = false;
 	    flippedOver2 = false;
 	}
+	
+	// tried adding functionality for game over screen/popup but did not work, troubleshooting
+	private void checkGameState() {
+		 if (numMatches == 3 && difficulty.equals("easy")) {
+	        // All matches found, switch to end game screen
+			 displayEndGamePopup();
+	    }
+	}
+
+	private void displayEndGamePopup() {
+	    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+	    alert.setTitle("Game Over");
+	    alert.setHeaderText(null);
+	    alert.setContentText("Congratulations! You have found all matches.");
+	    alert.showAndWait();
+	}
+
 
 	private void flipCardBack(int index) {
 	    Button cardButton = buttonArray.get(index);
