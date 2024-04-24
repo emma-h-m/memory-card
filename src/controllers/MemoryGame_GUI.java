@@ -65,6 +65,7 @@ public class MemoryGame_GUI extends Application {
 	private Deck deck;
 	private boolean playAgain = false;
 	private boolean isAnimating = false;
+	private GridPane cardGrid;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -222,7 +223,7 @@ public class MemoryGame_GUI extends Application {
 		scrollPane.setFitToWidth(true);
 		scrollPane.setPrefHeight(400);
 		scrollPane.setStyle("-fx-background: #322947FF; -fx-background-color: #322947FF;");
-		GridPane cardGrid = new GridPane();
+		cardGrid = new GridPane();
 		int gap = cardCount == 6 ? 20 : 10;
 		int Vgap = cardCount == 6 ? 35 : 10;
 		cardGrid.setHgap(Vgap);
@@ -301,6 +302,21 @@ public class MemoryGame_GUI extends Application {
 	    pause.setOnFinished(event -> {
 	        buttonArray.get(index1).setDisable(true);
 	        buttonArray.get(index2).setDisable(true);
+			Pane placeholder1 = new Pane();
+			placeholder1.setPrefSize(115, 142);
+			Pane placeholder2 = new Pane();
+			placeholder2.setPrefSize(115, 142);
+
+			cardGrid.getChildren().remove(buttonArray.get(index1));
+			cardGrid.add(placeholder1, GridPane.getColumnIndex(buttonArray.get(index1)),
+					GridPane.getRowIndex(buttonArray.get(index1)));
+			cardGrid.getChildren().remove(buttonArray.get(index2));
+			cardGrid.add(placeholder2, GridPane.getColumnIndex(buttonArray.get(index2)),
+					GridPane.getRowIndex(buttonArray.get(index2)));
+
+			game.incGuesses();
+			numMatches++;
+			System.out.println("Number of matches made: " + numMatches);
 	        resetCardState();
 	    });
 	    pause.play();
@@ -312,6 +328,7 @@ public class MemoryGame_GUI extends Application {
 	        // Flip both cards back
 	        flipCardBack(index1);
 	        flipCardBack(index2);
+
 	        resetCardState();
 	    });
 	    pause.play();
