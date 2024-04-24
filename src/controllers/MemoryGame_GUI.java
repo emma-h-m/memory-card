@@ -64,6 +64,7 @@ public class MemoryGame_GUI extends Application {
 	private Stats stats;
 	private Deck deck;
 	private boolean playAgain = false;
+	private boolean isAnimating = false;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -258,115 +259,23 @@ public class MemoryGame_GUI extends Application {
 			cardButton.setGraphic(cardPane);
 
 			cardButton.setOnAction(e -> {
-				if (numSel == 0) {
+			    if (!flippedOver2 && !cardButton.isDisabled()) {  // Check if no animation is ongoing and the card is not disabled
+			        rotator.play();
 
-					rotator.play();
-
-					if (flippedOver1 == true) {
-						flippedOver1 = false;
-						return;
-					}
-					index1 = buttonArray.indexOf(cardButton);
-
-					card1 = shuffledDeck.get(index1);
-					numSel = 1;
-					flippedOver1 = true;
-
-				}
-
-				else if (numSel == 1) {
-
-					rotator.play();
-
-					if (flippedOver2 == true) {
-						flippedOver2 = false;
-						return;
-					}
-
-					index2 = buttonArray.indexOf(cardButton);
-
-					card2 = shuffledDeck.get(index2);
-					numSel = 2;
-					flippedOver2 = true;
-
-				}
-
-				else if (numSel == 4) { // This turns the selcted cards back over.
-					rotator.play();
-					return;
-				}
-
-				if (numSel == 2) {
-
-					match = game.compareCards(card1, card2);
-
-					if (match == false) {// If it's not a match
-						PauseTransition p = new PauseTransition(Duration.millis(1000));
-						p.setOnFinished(event -> {
-							numSel = 4;
-							buttonArray.get(index1).fire();
-							buttonArray.get(index2).fire();
-
-							game.incGuesses();
-
-							numSel = 0;
-							flippedOver1 = false;
-							flippedOver2 = false;
-						});
-						p.play();
-
-					} else if (index1 == index2) {
-						// do nothing
-						numSel = 0;
-						flippedOver1 = false;
-						flippedOver2 = false;
-					} else if (match) { // It is a match
-						PauseTransition p1 = new PauseTransition(Duration.millis(1000));
-						p1.setOnFinished(event -> {
-							buttonArray.get(index1).setDisable(true);
-							buttonArray.get(index2).setDisable(true);
-
-							// Replace removed buttons with placeholders
-							Pane placeholder1 = new Pane();
-							placeholder1.setPrefSize(115, 142);
-							Pane placeholder2 = new Pane();
-							placeholder2.setPrefSize(115, 142);
-
-							cardGrid.getChildren().remove(buttonArray.get(index1));
-							cardGrid.add(placeholder1, GridPane.getColumnIndex(buttonArray.get(index1)),
-									GridPane.getRowIndex(buttonArray.get(index1)));
-							cardGrid.getChildren().remove(buttonArray.get(index2));
-							cardGrid.add(placeholder2, GridPane.getColumnIndex(buttonArray.get(index2)),
-									GridPane.getRowIndex(buttonArray.get(index2)));
-
-							game.incGuesses();
-							numMatches++;
-							System.out.println("Number of matches made: " + numMatches);
-
-							numSel = 0;
-							flippedOver1 = false;
-							flippedOver2 = false;
-
-							if (numMatches == 3 && difficulty.equals("easy")) {
-								System.out.println("Easy game won");
-								stats.addScore(theme, difficulty, game.getGameNumGuesses());
-								Alert choice = new Alert(AlertType.NONE);
-								choice.setHeaderText("Play again?");
-								choice.setContentText("Would you like to play again?");
-
-								Optional<ButtonType> result = choice.showAndWait();
-								// If yes
-								if (result.isPresent() && result.get() == ButtonType.OK) {
-									playAgain = true;
-								}
-							} else if (numMatches == 6 && difficulty.equals("hard")) {
-								// The game is won
-							}
-						});
-						p1.play();
-					}
-				}
-			}); // end of setOnAction
+			        if (numSel == 0) {
+			            index1 = buttonArray.indexOf(cardButton);
+			            card1 = shuffledDeck.get(index1);
+			            flippedOver1 = true;
+			        } else if (numSel == 1) {
+			            index2 = buttonArray.indexOf(cardButton);
+			            if (index1 == index2) return; // Prevent matching the same card
+			            card2 = shuffledDeck.get(index2);
+			            flippedOver2 = true;
+			            checkForMatch(); // Check for a match when the second card is flipped
+			        }
+			        numSel = (numSel + 1) % 2; // Toggles between 0 and 1 for selecting cards
+			    }
+			});
 
 			int column = i / cardsPerColumn;
 			int row = i % cardsPerColumn;
@@ -379,6 +288,46 @@ public class MemoryGame_GUI extends Application {
 		gameScene = new Scene(layout, 800, 600);
 	}
 
+	private void checkForMatch() {
+	    if (game.compareCards(card1, card2)) {
+	        handleMatch(); // Handle match scenario
+	    } else {
+	        handleNoMatch(); // Handle no match scenario
+	    }
+	}
+
+	private void handleMatch() {
+	    PauseTransition pause = new PauseTransition(Duration.seconds(1));
+	    pause.setOnFinished(event -> {
+	        buttonArray.get(index1).setDisable(true);
+	        buttonArray.get(index2).setDisable(true);
+	        resetCardState();
+	    });
+	    pause.play();
+	}
+
+	private void handleNoMatch() {
+	    PauseTransition pause = new PauseTransition(Duration.seconds(1));
+	    pause.setOnFinished(event -> {
+	        // Flip both cards back
+	        flipCardBack(index1);
+	        flipCardBack(index2);
+	        resetCardState();
+	    });
+	    pause.play();
+	}
+
+	private void resetCardState() {
+	    numSel = 0;
+	    flippedOver1 = false;
+	    flippedOver2 = false;
+	}
+
+	private void flipCardBack(int index) {
+	    Button cardButton = buttonArray.get(index);
+	    RotateTransition rotator = createRotator(cardButton, (ImageView) ((StackPane) cardButton.getGraphic()).getChildren().get(1));
+	    rotator.play();
+	}
 	private RotateTransition createRotator(Button cardButton, ImageView cardFrontView) {
 		// First half of the rotation (0 to 90 degrees)
 		RotateTransition firstHalf = new RotateTransition(Duration.millis(500), cardButton);
@@ -399,7 +348,6 @@ public class MemoryGame_GUI extends Application {
 			cardFrontView.setVisible(!cardFrontView.isVisible());
 			secondHalf.play(); // Start the second half of rotation
 		});
-
 		// Chain the second half of rotation to play after the first half
 		firstHalf.setAutoReverse(false);
 		firstHalf.setCycleCount(1);
