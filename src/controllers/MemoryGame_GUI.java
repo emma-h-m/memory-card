@@ -1,9 +1,7 @@
 package controllers;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
-
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
@@ -39,19 +37,16 @@ import models.Card;
 import models.Deck;
 import models.MemoryGame;
 import models.Stats;
-
 /**
  * This class acts as the user interface for Memory Game. All of the neccessary
  * user inputs are provided by this class.
  */
 public class MemoryGame_GUI extends Application {
-
 	private Scene mainScene;
 	private Scene themeScene;
 	private Scene difficultyScene;
 	private Scene gameScene;
 	private Stage mainStage;
-
 	private MemoryGame game;
 	private String theme;
 	private Card card1, card2;
@@ -75,7 +70,6 @@ public class MemoryGame_GUI extends Application {
 		mainStage.show();
 		mainStage.setResizable(false);
 	}
-
 	private void setupMainScene() {
 		VBox root = new VBox(20);
 		Image backgroundImage = new Image("file:Documents/cardimages/welcomescreen.png");
@@ -83,7 +77,6 @@ public class MemoryGame_GUI extends Application {
 		String style = "-fx-background-image: " + backgroundImageUrl + ";";
 		root.setAlignment(Pos.CENTER);
 		root.setStyle(style);
-
 		// Create a StackPane to contain the play button
 		StackPane buttonContainer = new StackPane();
 		Button playButton = new Button("Start New Game");
@@ -92,36 +85,29 @@ public class MemoryGame_GUI extends Application {
 		playButton.setStyle(
 				"-fx-background-color: #322947FF; -fx-text-fill: #1D1231FF; -fx-border-color: #1D1231FF; -fx-border-width: 2px;");
 		playButton.setOnAction(e -> switchToThemeScene());
-
 		// Set padding for the button container to adjust its position
 		buttonContainer.setPadding(new Insets(245, 0, 0, 2)); // Adjust the bottom inset (20 in this example) to
 																// position the button lower
 		buttonContainer.getChildren().add(playButton);
-
 		root.getChildren().add(buttonContainer);
 		mainScene = new Scene(root, 800, 600);
 	}
-
 	private void switchToThemeScene() {
 		if (themeScene == null) { // create the scene if it hasn't been created yet
 			setupThemeScene();
 		}
 		mainStage.setScene(themeScene);
 	}
-
 	private void setupThemeScene() {
 		VBox layout = new VBox(20);
 		layout.setAlignment(Pos.CENTER);
 		layout.setStyle("-fx-background-color: #322947FF;");
-
 		Text chooseThemeText = new Text("Choose the Theme:");
 		chooseThemeText.setFont(Font.font("Palatino", FontWeight.BOLD, 30));
 		chooseThemeText.setStyle("-fx-fill: #0C1126FF;");
-
 		// HBox for buttons
 		HBox buttonBox = new HBox(20); // Increased space between buttons
 		buttonBox.setAlignment(Pos.CENTER);
-
 		// Button for Theme 1 (Earth)
 		ImageView earthView = new ImageView(new Image("file:Documents/cardimages/spacecardback.png"));
 		earthView.setFitHeight(170); // Increased size of the image
@@ -133,7 +119,6 @@ public class MemoryGame_GUI extends Application {
 		theme1.setStyle(
 				"-fx-background-color: #322947FF; -fx-text-fill: #0C1126FF; -fx-padding: 10; -fx-border-color: #0C1126FF; -fx-border-width: 2;");
 		theme1.setFont(new Font("Arial", 24));
-
 		// Button for Theme 2 (Cats)
 		ImageView catView = new ImageView(new Image("file:Documents/cardimages/catcardback.png"));
 		catView.setFitHeight(170); // Increased size of the image
@@ -145,7 +130,6 @@ public class MemoryGame_GUI extends Application {
 		theme2.setStyle(
 				"-fx-background-color: #322947FF; -fx-text-fill: #0C1126FF; -fx-padding: 10; -fx-border-color: #0C1126FF; -fx-border-width: 2;");
 		theme2.setFont(new Font("Arial", 24));
-
 		ImageView carView = new ImageView(new Image("file:Documents/cardimages/carcardback.png"));
 		carView.setFitHeight(170);
 		carView.setFitWidth(150);
@@ -156,26 +140,21 @@ public class MemoryGame_GUI extends Application {
 		theme3.setStyle(
 				"-fx-background-color: #322947FF; -fx-text-fill: #0C1126FF; -fx-padding: 10; -fx-border-color: #0C1126FF; -fx-border-width: 2;");
 		theme3.setFont(new Font("Arial", 24));
-
 		theme1.setOnAction(e -> switchToDifficultyScene(1));
 		theme2.setOnAction(e -> switchToDifficultyScene(2));
 		theme3.setOnAction(e -> switchToDifficultyScene(3));
-
 		// Adding buttons to the HBox
 		buttonBox.getChildren().addAll(theme1, theme2, theme3);
-
 		// Add the HBox to the main VBox
 		layout.getChildren().addAll(chooseThemeText, buttonBox);
 		themeScene = new Scene(layout, 800, 600);
 	}
-
 	private void switchToDifficultyScene(int themeNumber) {
 		if (difficultyScene == null) { // create the scene if it hasn't been created yet
 			setupDifficultyScene(themeNumber);
 		}
 		mainStage.setScene(difficultyScene);
 	}
-
 	private void setupDifficultyScene(int themeNumber) {
 		VBox layout = new VBox(20);
 		layout.setAlignment(Pos.CENTER);
@@ -194,14 +173,12 @@ public class MemoryGame_GUI extends Application {
 		layout.getChildren().addAll(chooseDifficultyText, easyButton, hardButton);
 		difficultyScene = new Scene(layout, 800, 600);
 	}
-
 	private void startGame(boolean isEasy, int themeNumber) {
 		int cardCount = isEasy ? 6 : 12;
 		String difficulty = isEasy ? "easy" : "hard";
 		setupGameScene(cardCount, themeNumber, difficulty);
 		mainStage.setScene(gameScene);
 	}
-
 	private void setupGameScene(int cardCount, int themeNumber, String difficulty) {
 		if (themeNumber == 1)
 			theme = "space";
@@ -211,7 +188,6 @@ public class MemoryGame_GUI extends Application {
 			theme = "car";
 		game = new MemoryGame(theme, difficulty);
 		stats = new Stats();
-
 		VBox layout = new VBox(20);
 		layout.setAlignment(Pos.CENTER);
 		layout.setStyle("-fx-background-color: #322947FF;");
@@ -228,12 +204,10 @@ public class MemoryGame_GUI extends Application {
 		cardGrid.setHgap(Vgap);
 		cardGrid.setVgap(gap);
 		cardGrid.setAlignment(Pos.CENTER);
-
 		// Create deck and lay out the cards.
 		deck = new Deck(themeNumber == 1 ? "space" : (themeNumber == 2 ? "cat" : "car"), difficulty);
 		ArrayList<Card> shuffledDeck = deck.createDeck(); // Create and shuffle the deck
 		Collections.shuffle(shuffledDeck);
-
 		int cardsPerColumn = cardCount == 6 ? 2 : 2;
 		for (int i = 0; i < cardCount; i++) {
 			String cardBackImage = themeNumber == 1 ? "spacecardback.png"
@@ -241,26 +215,23 @@ public class MemoryGame_GUI extends Application {
 			ImageView imageView = new ImageView(new Image("file:Documents/cardimages/" + cardBackImage));
 			imageView.setFitWidth(100);
 			imageView.setFitHeight(140);
-
 			Button cardButton = new Button();
 			cardButton.setGraphic(imageView);
 			cardButton.setStyle("-fx-background-color: #322947FF;");
 			Card card = shuffledDeck.get(i);
-
 			// Get the ImageView from the graphic of the button
 			ImageView cardFrontView = new ImageView(new Image("file:Documents/cardimages/" + card.getPath()));
 			cardFrontView.setFitWidth(100);
 			cardFrontView.setFitHeight(140);
 			cardFrontView.setVisible(false); // Initially hide the front of the card
-
 			RotateTransition rotator = createRotator(cardButton, cardFrontView); // Pass the Button and ImageView of the
 																					// Card
 			StackPane cardPane = new StackPane(imageView, cardFrontView);
 			cardButton.setGraphic(cardPane);
 
 			cardButton.setOnAction(e -> {
-			    if (!flippedOver2 && !cardButton.isDisabled()) {  // Check if no animation is ongoing and the card is not disabled
-			        rotator.play();
+				if (numSel == 0) {
+
 					rotator.play();
 
 					if (flippedOver1 == true) {
@@ -292,7 +263,8 @@ public class MemoryGame_GUI extends Application {
 
 				}
 
-				else if (numSel == 3) { // This turns the selcted cards back ove
+				else if (numSel == 4) { // This turns the selcted cards back over.
+					rotator.play();
 					return;
 				}
 
@@ -367,6 +339,9 @@ public class MemoryGame_GUI extends Application {
 					}
 				}
 			}); // end of setOnAction
+			    if (!flippedOver2 && !cardButton.isDisabled()) {  // Check if no animation is ongoing and the card is not disabled
+			        rotator.play();
+
 			        if (numSel == 0) {
 			            index1 = buttonArray.indexOf(cardButton);
 			            card1 = shuffledDeck.get(index1);
@@ -387,7 +362,6 @@ public class MemoryGame_GUI extends Application {
 			cardGrid.add(cardButton, column, row);
 			buttonArray.add(cardButton);
 		}
-
 		scrollPane.setContent(cardGrid);
 		layout.getChildren().addAll(gameInfoText, scrollPane);
 		gameScene = new Scene(layout, 800, 600);
@@ -440,28 +414,25 @@ public class MemoryGame_GUI extends Application {
 		firstHalf.setFromAngle(0);
 		firstHalf.setToAngle(90);
 		firstHalf.setInterpolator(Interpolator.LINEAR);
-
 		// Second half of the rotation (90 to 180 degrees)
 		RotateTransition secondHalf = new RotateTransition(Duration.millis(500), cardButton);
 		secondHalf.setAxis(Rotate.Y_AXIS);
 		secondHalf.setFromAngle(90);
 		secondHalf.setToAngle(0);
 		secondHalf.setInterpolator(Interpolator.LINEAR);
-
 		// Toggle visibility of the card front when the first half of rotation finishes
 		firstHalf.setOnFinished(e -> {
 			cardFrontView.setVisible(!cardFrontView.isVisible());
 			secondHalf.play(); // Start the second half of rotation
 		});
+
 		// Chain the second half of rotation to play after the first half
 		firstHalf.setAutoReverse(false);
 		firstHalf.setCycleCount(1);
 		secondHalf.setAutoReverse(true);
 		secondHalf.setCycleCount(1);
-
 		return firstHalf;
 	}
-
 	/**
 	 * The main method of the MemoryGame_GUI class.
 	 * 
@@ -470,5 +441,4 @@ public class MemoryGame_GUI extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-
 }
