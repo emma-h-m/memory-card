@@ -239,12 +239,10 @@ public class MemoryGame_GUI extends Application {
 																					// Card
 			StackPane cardPane = new StackPane(imageView, cardFrontView);
 			cardButton.setGraphic(cardPane);
-
 			cardButton.setOnAction(e -> {
 				if (!flippedOver2 && !cardButton.isDisabled()) { // Check if no animation is ongoing and the card is not
 																	// disabled
 					rotator.play();
-
 					if (numSel == 0) {
 						index1 = buttonArray.indexOf(cardButton);
 						card1 = shuffledDeck.get(index1);
@@ -260,7 +258,6 @@ public class MemoryGame_GUI extends Application {
 					numSel = (numSel + 1) % 2; // Toggles between 0 and 1 for selecting cards
 				}
 			});
-
 			int column = i / cardsPerColumn;
 			int row = i % cardsPerColumn;
 			cardGrid.add(cardButton, column, row);
@@ -280,12 +277,27 @@ public class MemoryGame_GUI extends Application {
 	}
 
 	private void handleMatch() {
-<<<<<<< HEAD
 		PauseTransition pause = new PauseTransition(Duration.seconds(1));
 		pause.setOnFinished(event -> {
 			buttonArray.get(index1).setDisable(true);
 			buttonArray.get(index2).setDisable(true);
+			Pane placeholder1 = new Pane();
+			placeholder1.setPrefSize(115, 142);
+			Pane placeholder2 = new Pane();
+			placeholder2.setPrefSize(115, 142);
+			cardGrid.getChildren().remove(buttonArray.get(index1));
+			cardGrid.add(placeholder1, GridPane.getColumnIndex(buttonArray.get(index1)),
+					GridPane.getRowIndex(buttonArray.get(index1)));
+			cardGrid.getChildren().remove(buttonArray.get(index2));
+			cardGrid.add(placeholder2, GridPane.getColumnIndex(buttonArray.get(index2)),
+					GridPane.getRowIndex(buttonArray.get(index2)));
+			game.incGuesses();
+			numMatches++;
+			System.out.println("Number of matches made: " + numMatches);
 			resetCardState();
+
+			// Check the game state after each match
+			checkGameState();
 		});
 		pause.play();
 	}
@@ -299,45 +311,6 @@ public class MemoryGame_GUI extends Application {
 			resetCardState();
 		});
 		pause.play();
-=======
-	    PauseTransition pause = new PauseTransition(Duration.seconds(1));
-	    pause.setOnFinished(event -> {
-	        buttonArray.get(index1).setDisable(true);
-	        buttonArray.get(index2).setDisable(true);
-			Pane placeholder1 = new Pane();
-			placeholder1.setPrefSize(115, 142);
-			Pane placeholder2 = new Pane();
-			placeholder2.setPrefSize(115, 142);
-
-			cardGrid.getChildren().remove(buttonArray.get(index1));
-			cardGrid.add(placeholder1, GridPane.getColumnIndex(buttonArray.get(index1)),
-					GridPane.getRowIndex(buttonArray.get(index1)));
-			cardGrid.getChildren().remove(buttonArray.get(index2));
-			cardGrid.add(placeholder2, GridPane.getColumnIndex(buttonArray.get(index2)),
-					GridPane.getRowIndex(buttonArray.get(index2)));
-
-			game.incGuesses();
-			numMatches++;
-			System.out.println("Number of matches made: " + numMatches);
-	        resetCardState();
-	        
-	     // Check the game state after each match
-	        checkGameState();
-	    });
-	    pause.play();
-	}
-
-	private void handleNoMatch() {
-	    PauseTransition pause = new PauseTransition(Duration.seconds(1));
-	    pause.setOnFinished(event -> {
-	        // Flip both cards back
-	        flipCardBack(index1);
-	        flipCardBack(index2);
-
-	        resetCardState();
-	    });
-	    pause.play();
->>>>>>> 596a2211662298c681e0bb20d55a4bc8775d6c47
 	}
 
 	private void resetCardState() {
@@ -345,23 +318,23 @@ public class MemoryGame_GUI extends Application {
 		flippedOver1 = false;
 		flippedOver2 = false;
 	}
-	
-	// tried adding functionality for game over screen/popup but did not work, troubleshooting
+
+	// tried adding functionality for game over screen/popup but did not work,
+	// troubleshooting
 	private void checkGameState() {
-		 if (numMatches == 3 && difficulty.equals("easy")) {
-	        // All matches found, switch to end game screen
-			 displayEndGamePopup();
-	    }
+		if (numMatches == 3 && difficulty.equals("easy")) {
+			// All matches found, switch to end game screen
+			displayEndGamePopup();
+		}
 	}
 
 	private void displayEndGamePopup() {
-	    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-	    alert.setTitle("Game Over");
-	    alert.setHeaderText(null);
-	    alert.setContentText("Congratulations! You have found all matches.");
-	    alert.showAndWait();
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Game Over");
+		alert.setHeaderText(null);
+		alert.setContentText("Congratulations! You have found all matches.");
+		alert.showAndWait();
 	}
-
 
 	private void flipCardBack(int index) {
 		Button cardButton = buttonArray.get(index);
@@ -388,7 +361,6 @@ public class MemoryGame_GUI extends Application {
 			cardFrontView.setVisible(!cardFrontView.isVisible());
 			secondHalf.play(); // Start the second half of rotation
 		});
-
 		// Chain the second half of rotation to play after the first half
 		firstHalf.setAutoReverse(false);
 		firstHalf.setCycleCount(1);
