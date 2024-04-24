@@ -291,8 +291,7 @@ public class MemoryGame_GUI extends Application {
 
 				}
 
-				else if (numSel == 4) { // This turns the selcted cards back over.
-					rotator.play();
+				else if (numSel == 3) { // This turns the selcted cards back ove
 					return;
 				}
 
