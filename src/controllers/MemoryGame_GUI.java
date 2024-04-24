@@ -11,6 +11,7 @@ import javafx.animation.RotateTransition;
  
  */
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -199,7 +200,7 @@ public class MemoryGame_GUI extends Application {
 
 	private void startGame(boolean isEasy, int themeNumber) {
 		int cardCount = isEasy ? 6 : 12;
-		String difficulty = isEasy ? "easy" : "hard";
+		difficulty = isEasy ? "easy" : "hard";
 		setupGameScene(cardCount, themeNumber, difficulty);
 		mainStage.setScene(gameScene);
 	}
@@ -346,6 +347,7 @@ public class MemoryGame_GUI extends Application {
 	
 	// tried adding functionality for game over screen/popup but did not work, troubleshooting
 	private void checkGameState() {
+		System.out.println("Difficulty = "+ difficulty);
 		 if (numMatches == 3 && difficulty.equals("easy")) {
 	        // All matches found, switch to end game screen
 			 displayEndGamePopup();
@@ -353,11 +355,11 @@ public class MemoryGame_GUI extends Application {
 	}
 
 	private void displayEndGamePopup() {
-	    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-	    alert.setTitle("Game Over");
-	    alert.setHeaderText(null);
-	    alert.setContentText("Congratulations! You have found all matches.");
-	    alert.showAndWait();
+	        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+	        alert.setTitle("Game Over");
+	        alert.setHeaderText(null);
+	        alert.setContentText("Congratulations! You have found all matches.");
+	        alert.show();
 	}
 
 
