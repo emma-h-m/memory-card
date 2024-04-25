@@ -10,6 +10,7 @@ import javafx.animation.RotateTransition;
  
  */
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -108,7 +109,7 @@ public class MemoryGame_GUI extends Application {
 	private void setupThemeScene() {
 		VBox layout = new VBox(20);
 		layout.setAlignment(Pos.CENTER);
-		layout.setStyle("-fx-background-color: #322947FF;");
+		layout.setStyle("-fx-background-color: #272744;");
 		Text chooseThemeText = new Text("Choose the Theme:");
 		chooseThemeText.setFont(Font.font("Palatino", FontWeight.BOLD, 30));
 		chooseThemeText.setStyle("-fx-fill: #0C1126FF;");
@@ -124,7 +125,7 @@ public class MemoryGame_GUI extends Application {
 		Button theme1 = new Button();
 		theme1.setGraphic(earthBox);
 		theme1.setStyle(
-				"-fx-background-color: #322947FF; -fx-text-fill: #0C1126FF; -fx-padding: 10; -fx-border-color: #0C1126FF; -fx-border-width: 2;");
+				"-fx-background-color: #272744; -fx-text-fill: #0C1126FF; -fx-padding: 10; -fx-border-color: #0C1126FF; -fx-border-width: 2;");
 		theme1.setFont(new Font("Arial", 24));
 		// Button for Theme 2 (Cats)
 		ImageView catView = new ImageView(new Image("file:Documents/cardimages/catcardback.png"));
@@ -135,7 +136,7 @@ public class MemoryGame_GUI extends Application {
 		Button theme2 = new Button();
 		theme2.setGraphic(catBox);
 		theme2.setStyle(
-				"-fx-background-color: #322947FF; -fx-text-fill: #0C1126FF; -fx-padding: 10; -fx-border-color: #0C1126FF; -fx-border-width: 2;");
+				"-fx-background-color: #272744; -fx-text-fill: #0C1126FF; -fx-padding: 10; -fx-border-color: #0C1126FF; -fx-border-width: 2;");
 		theme2.setFont(new Font("Arial", 24));
 		ImageView carView = new ImageView(new Image("file:Documents/cardimages/carcardback.png"));
 		carView.setFitHeight(170);
@@ -145,7 +146,7 @@ public class MemoryGame_GUI extends Application {
 		Button theme3 = new Button();
 		theme3.setGraphic(carBox);
 		theme3.setStyle(
-				"-fx-background-color: #322947FF; -fx-text-fill: #0C1126FF; -fx-padding: 10; -fx-border-color: #0C1126FF; -fx-border-width: 2;");
+				"-fx-background-color: #272744; -fx-text-fill: #0C1126FF; -fx-padding: 10; -fx-border-color: #0C1126FF; -fx-border-width: 2;");
 		theme3.setFont(new Font("Arial", 24));
 		theme1.setOnAction(e -> switchToDifficultyScene(1));
 		theme2.setOnAction(e -> switchToDifficultyScene(2));
@@ -167,7 +168,7 @@ public class MemoryGame_GUI extends Application {
 	private void setupDifficultyScene(int themeNumber) {
 		VBox layout = new VBox(20);
 		layout.setAlignment(Pos.CENTER);
-		layout.setStyle("-fx-background-color: #322947FF;");
+		layout.setStyle("-fx-background-color: #272744;");
 		Text chooseDifficultyText = new Text("Choose the Difficulty:");
 		chooseDifficultyText.setFont(Font.font("Palatino", FontWeight.BOLD, 30));
 		chooseDifficultyText.setStyle("-fx-fill: #0C1126FF;");
@@ -185,7 +186,7 @@ public class MemoryGame_GUI extends Application {
 
 	private void startGame(boolean isEasy, int themeNumber) {
 		int cardCount = isEasy ? 6 : 12;
-		String difficulty = isEasy ? "easy" : "hard";
+		difficulty = isEasy ? "easy" : "hard";
 		setupGameScene(cardCount, themeNumber, difficulty);
 		mainStage.setScene(gameScene);
 	}
@@ -201,14 +202,14 @@ public class MemoryGame_GUI extends Application {
 		stats = new Stats();
 		VBox layout = new VBox(20);
 		layout.setAlignment(Pos.CENTER);
-		layout.setStyle("-fx-background-color: #322947FF;");
+		layout.setStyle("-fx-background-color: #272744;");
 		Text gameInfoText = new Text("You are playing " + (cardCount == 6 ? "Easy" : "Hard") + " mode.");
 		gameInfoText.setFont(Font.font("Palatino", FontWeight.BOLD, 20));
 		gameInfoText.setStyle("-fx-fill: #FFFFFF;");
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setFitToWidth(true);
 		scrollPane.setPrefHeight(400);
-		scrollPane.setStyle("-fx-background: #322947FF; -fx-background-color: #322947FF;");
+		scrollPane.setStyle("-fx-background: #272744; -fx-background-color: #322947FF;");
 		cardGrid = new GridPane();
 		int gap = cardCount == 6 ? 20 : 10;
 		int Vgap = cardCount == 6 ? 35 : 10;
@@ -228,7 +229,7 @@ public class MemoryGame_GUI extends Application {
 			imageView.setFitHeight(140);
 			Button cardButton = new Button();
 			cardButton.setGraphic(imageView);
-			cardButton.setStyle("-fx-background-color: #322947FF;");
+			cardButton.setStyle("-fx-background-color: #272744;");
 			Card card = shuffledDeck.get(i);
 			// Get the ImageView from the graphic of the button
 			ImageView cardFrontView = new ImageView(new Image("file:Documents/cardimages/" + card.getPath()));
@@ -322,6 +323,7 @@ public class MemoryGame_GUI extends Application {
 	// tried adding functionality for game over screen/popup but did not work,
 	// troubleshooting
 	private void checkGameState() {
+		System.out.println("Difficulty = " + difficulty);
 		if (numMatches == 3 && difficulty.equals("easy")) {
 			// All matches found, switch to end game screen
 			displayEndGamePopup();
@@ -333,7 +335,7 @@ public class MemoryGame_GUI extends Application {
 		alert.setTitle("Game Over");
 		alert.setHeaderText(null);
 		alert.setContentText("Congratulations! You have found all matches.");
-		alert.showAndWait();
+		alert.show();
 	}
 
 	private void flipCardBack(int index) {
