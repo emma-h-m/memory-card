@@ -164,9 +164,7 @@ public class MemoryGame_GUI extends Application {
 	}
 
 	private void switchToDifficultyScene(int themeNumber) {
-		if (difficultyScene == null) { // create the scene if it hasn't been created yet
-			setupDifficultyScene(themeNumber);
-		}
+		setupDifficultyScene(themeNumber);
 		mainStage.setScene(difficultyScene);
 	}
 
