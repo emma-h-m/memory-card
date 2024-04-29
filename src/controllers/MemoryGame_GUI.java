@@ -357,6 +357,9 @@ public class MemoryGame_GUI extends Application {
 		againText.setStyle("-fx-fill: #FFFFFF;");
 		Button yesButton = new Button("Yes");
 		Button quitButton = new Button("Quit");
+		quitButton.setOnAction(e->{
+			System.exit(0);
+		});
 		HBox yesQuit = new HBox();
 		yesQuit.setSpacing(15);
 		yesQuit.setAlignment(Pos.CENTER);
