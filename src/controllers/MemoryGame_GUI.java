@@ -21,6 +21,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -49,6 +50,10 @@ public class MemoryGame_GUI extends Application {
 	private Scene themeScene;
 	private Scene difficultyScene;
 	private Scene gameScene;
+	
+	private Scene endGameScene;
+	private GridPane leaderboard;
+	
 	private Stage mainStage;
 	private MemoryGame game;
 	private String theme;
@@ -59,7 +64,7 @@ public class MemoryGame_GUI extends Application {
 	private int index1, index2;
 	private boolean flippedOver1, flippedOver2 = false;
 	private int numMatches = 0;
-	private Stats stats;
+	private Stats stats = new Stats();
 	private Deck deck;
 	private boolean playAgain = false;
 	private boolean isAnimating = false;
@@ -198,8 +203,8 @@ public class MemoryGame_GUI extends Application {
 			theme = "cat";
 		else
 			theme = "car";
+		System.out.println(theme);
 		game = new MemoryGame(theme, difficulty);
-		stats = new Stats();
 		VBox layout = new VBox(20);
 		layout.setAlignment(Pos.CENTER);
 		layout.setStyle("-fx-background-color: #272744;");
@@ -324,18 +329,59 @@ public class MemoryGame_GUI extends Application {
 	// troubleshooting
 	private void checkGameState() {
 		System.out.println("Difficulty = " + difficulty);
-		if (numMatches == 3 && difficulty.equals("easy")) {
+		if (numMatches == 3 && difficulty.equals("easy") || numMatches == 6 && difficulty.equals("hard")) {
 			// All matches found, switch to end game screen
 			displayEndGamePopup();
 		}
 	}
 
 	private void displayEndGamePopup() {
+		ScrollPane scrollPane = new ScrollPane();
+		scrollPane.setFitToWidth(true);
+		scrollPane.setPrefHeight(400);
+		scrollPane.setStyle("-fx-background: #272744; -fx-background-color: #322947FF;");
+		
+		
+		VBox endGameBox = new VBox();
+		endGameBox.setAlignment(Pos.CENTER);
+		Text congratsText = new Text("Congratlations! You have found all matches!");
+		
+		setupLeaderboard();
+		leaderboard.setAlignment(Pos.CENTER);
+		
+		Text againText = new Text("Would you like to play again?");
+		congratsText.setFont(Font.font("Palatino", FontWeight.BOLD, 20));
+		congratsText.setStyle("-fx-fill: #FFFFFF;");
+		againText.setFont(Font.font("Palatino", FontWeight.BOLD, 20));
+		againText.setStyle("-fx-fill: #FFFFFF;");
+		Button yesButton = new Button("Yes");
+		Button quitButton = new Button("Quit");
+		HBox yesQuit = new HBox();
+		yesQuit.setSpacing(15);
+		yesQuit.setAlignment(Pos.CENTER);
+		yesQuit.getChildren().addAll(yesButton, quitButton);
+		
+		
+		yesButton.setOnAction( e -> {
+			buttonArray = new ArrayList<Button>();
+			numMatches = 0;
+			flippedOver1 = false;
+			flippedOver2 = false;
+			themeScene = null;
+			start(mainStage);
+		});
+		endGameBox.getChildren().addAll(congratsText, leaderboard, againText, yesQuit);
+		
+		scrollPane.setContent(endGameBox);
+		endGameScene = new Scene(scrollPane, 800, 600);
+		mainStage.setScene(endGameScene);
+		/*
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Game Over");
 		alert.setHeaderText(null);
 		alert.setContentText("Congratulations! You have found all matches.");
 		alert.show();
+		*/
 	}
 
 	private void flipCardBack(int index) {
@@ -369,6 +415,38 @@ public class MemoryGame_GUI extends Application {
 		secondHalf.setAutoReverse(true);
 		secondHalf.setCycleCount(1);
 		return firstHalf;
+	}
+	
+	private void setupLeaderboard() {
+		leaderboard = new GridPane();
+		leaderboard.setGridLinesVisible(true);
+		String spaceEasy = stats.getEasySpaceHighScore() + "";
+		String spaceHard = stats.getHardSpaceHighScore() + "";
+		String catEasy = stats.getEasyCatHighScore() + "";
+		String catHard = stats.getHardCatHighScore() + "";
+		String carEasy = stats.getEasyCarHighScore() + "";
+		String carHard = stats.getHardCarHighScore() + "";
+		
+		
+		//Column 0
+		leaderboard.add(new Text("Leaderboard"), 0, 0); //Span col 2 and 3
+		leaderboard.add(new Text("Theme"), 0, 1);
+		leaderboard.add(new Text("Space"), 0, 3);
+		leaderboard.add(new Text("Cat"), 0, 4);
+		leaderboard.add(new Text("Car"), 0, 5);
+		
+		//Column 1
+		leaderboard.add(new Text("High Score"), 1, 1); //Span col 3
+		leaderboard.add(new Text("Easy"), 1, 2);
+		leaderboard.add(new Text(spaceEasy), 1, 3);
+		leaderboard.add(new Text(catEasy), 1, 4);
+		leaderboard.add(new Text(carEasy), 1, 5);
+		
+		//Column 2
+		leaderboard.add(new Text("Hard"), 2, 2);
+		leaderboard.add(new Text(spaceHard), 2, 3);
+		leaderboard.add(new Text(catHard), 2, 4);
+		leaderboard.add(new Text(carHard), 2, 5);	
 	}
 
 	/**

@@ -30,22 +30,22 @@ public class StatsTest {
 		stats.addScore("car", "hard", 14);
 		stats.addScore("car", "hard", 1000);
 
-		// easyGalaxyHighScore
-		stats.addScore("galaxy", "easy", 30);
-		stats.addScore("galaxy", "easy", 20);
-		stats.addScore("galaxy", "easy", 20);
+		// easySpaceHighScore
+		stats.addScore("Space", "easy", 30);
+		stats.addScore("Space", "easy", 20);
+		stats.addScore("Space", "easy", 20);
 
-		// hardGalaxyHighScore
-		stats.addScore("galaxy", "hard", 20);
-		stats.addScore("galaxy", "hard", 18);
-		stats.addScore("galaxy", "hard", 190);
+		// hardSpaceHighScore
+		stats.addScore("Space", "hard", 20);
+		stats.addScore("Space", "hard", 18);
+		stats.addScore("Space", "hard", 190);
 
 		assertEquals(10, stats.getEasyCatHighScore());
 		assertEquals(12, stats.getHardCatHighScore());
 		assertEquals(8, stats.getEasyCarHighScore());
 		assertEquals(14, stats.getHardCarHighScore());
-		assertEquals(20, stats.getEasyGalaxyHighScore());
-		assertEquals(18, stats.getHardGalaxyHighScore());
+		assertEquals(20, stats.getEasySpaceHighScore());
+		assertEquals(18, stats.getHardSpaceHighScore());
 	}
 
 	@Test
@@ -69,22 +69,22 @@ public class StatsTest {
 		stats.addScore("car", "hard", 14);
 		stats.addScore("car", "hard", 19);
 
-		// easyGalaxyAvg
-		stats.addScore("galaxy", "easy", 20);
-		stats.addScore("galaxy", "easy", 21);
-		stats.addScore("galaxy", "easy", 0);
+		// easySpaceAvg
+		stats.addScore("Space", "easy", 20);
+		stats.addScore("Space", "easy", 21);
+		stats.addScore("Space", "easy", 0);
 
-		// hardGalaxyAvg
-		stats.addScore("galaxy", "hard", 18);
-		stats.addScore("galaxy", "hard", 10);
-		stats.addScore("galaxy", "hard", 8);
-		stats.addScore("galaxy", "hard", 4);
+		// hardSpaceAvg
+		stats.addScore("Space", "hard", 18);
+		stats.addScore("Space", "hard", 10);
+		stats.addScore("Space", "hard", 8);
+		stats.addScore("Space", "hard", 4);
 
 		assertEquals(12, stats.getEasyCatAvg(), 0.001);
 		assertEquals(13, stats.getHardCatAvg(), 0.001);
 		assertEquals(6, stats.getEasyCarAvg(), 0.001);
 		assertEquals(16, stats.getHardCarAvg(), 0.001);
-		assertEquals(13, stats.getEasyGalaxyAvg(), 0.001);
-		assertEquals(10, stats.getHardGalaxyAvg(), 0.001);
+		assertEquals(13, stats.getEasySpaceAvg(), 0.001);
+		assertEquals(10, stats.getHardSpaceAvg(), 0.001);
 	}
 }

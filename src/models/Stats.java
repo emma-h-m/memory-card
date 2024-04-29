@@ -6,13 +6,13 @@ package models;
  * high scores, etc...
  */
 public class Stats {
-	private double easyCatAvg, hardCatAvg, easyCarAvg, hardCarAvg, easyGalaxyAvg, hardGalaxyAvg = 0;
-	private int easyCatNumGames, hardCatNumGames, easyCarNumGames, hardCarNumGames, easyGalaxyNumGames,
-			hardGalaxyNumGames = 0;
-	private int easyCatRawScore, hardCatRawScore, easyCarRawScore, hardCarRawScore, easyGalaxyRawScore,
-			hardGalaxyRawScore = 0;
-	private int easyCatHighScore, hardCatHighScore, easyCarHighScore, hardCarHighScore, easyGalaxyHighScore,
-			hardGalaxyHighScore = 0;
+	private double easyCatAvg, hardCatAvg, easyCarAvg, hardCarAvg, easySpaceAvg, hardSpaceyAvg = 0;
+	private int easyCatNumGames, hardCatNumGames, easyCarNumGames, hardCarNumGames, easySpaceNumGames,
+			hardSpaceNumGames = 0;
+	private int easyCatRawScore, hardCatRawScore, easyCarRawScore, hardCarRawScore, easySpaceRawScore,
+			hardSpaceRawScore = 0;
+	private int easyCatHighScore, hardCatHighScore, easyCarHighScore, hardCarHighScore, easySpaceHighScore,
+			hardSpaceHighScore = 0;
 
 	// Constructor
 	/**
@@ -83,30 +83,30 @@ public class Stats {
 			}
 		} // end of car if statememts
 
-		else { // theme == "galaxy"
+		else { // theme == "Space"
 			if (difficulty == "easy") {
-				easyGalaxyNumGames++;
-				easyGalaxyRawScore += numGuesses;
-				easyGalaxyAvg = easyGalaxyRawScore / easyGalaxyNumGames;
-				if (easyGalaxyHighScore == 0) {
-					easyGalaxyHighScore = numGuesses;
-				} else if (numGuesses < easyGalaxyHighScore) {
-					easyGalaxyHighScore = numGuesses;
+				easySpaceNumGames++;
+				easySpaceRawScore += numGuesses;
+				easySpaceAvg = easySpaceRawScore / easySpaceNumGames;
+				if (easySpaceHighScore == 0) {
+					easySpaceHighScore = numGuesses;
+				} else if (numGuesses < easySpaceHighScore) {
+					easySpaceHighScore = numGuesses;
 				}
 
 			}
 
 			else { // difficulty == "hard"
-				hardGalaxyNumGames++;
-				hardGalaxyRawScore += numGuesses;
-				hardGalaxyAvg = hardGalaxyRawScore / hardGalaxyNumGames;
-				if (hardGalaxyHighScore == 0) {
-					hardGalaxyHighScore = numGuesses;
-				} else if (numGuesses < hardGalaxyHighScore) {
-					hardGalaxyHighScore = numGuesses;
+				hardSpaceNumGames++;
+				hardSpaceRawScore += numGuesses;
+				hardSpaceyAvg = hardSpaceRawScore / hardSpaceNumGames;
+				if (hardSpaceHighScore == 0) {
+					hardSpaceHighScore = numGuesses;
+				} else if (numGuesses < hardSpaceHighScore) {
+					hardSpaceHighScore = numGuesses;
 				}
 			}
-		} // end of galaxy if statements
+		} // end of Space if statements
 	}// end of addScore()
 
 	
@@ -194,41 +194,41 @@ public class Stats {
 	/**
 	 * A getter method. Returns the high score for the difficulty and
 	 * theme that are in the title of the method.
-	 * @return easyGalaxyHighScore, the current high score for the difficulty
+	 * @return easySpaceHighScore, the current high score for the difficulty
 	 * and theme.
 	 */
-	public int getEasyGalaxyHighScore() {
-		return easyGalaxyHighScore;
+	public int getEasySpaceHighScore() {
+		return easySpaceHighScore;
 	}
 	
 	/**
 	 * A getter method. Returns the average score for the difficulty and
 	 * theme that are in the title of the method.
-	 * @return easyGalaxyAverage, the current average score for the difficulty
+	 * @return easySpaceAverage, the current average score for the difficulty
 	 * and theme.
 	 */
-	public double getEasyGalaxyAvg() {
-		return easyGalaxyAvg;
+	public double getEasySpaceAvg() {
+		return easySpaceAvg;
 	}
 	
 	/**
 	 * A getter method. Returns the high score for the difficulty and
 	 * theme that are in the title of the method.
-	 * @return hardGalaxyHighScore, the current high score for the difficulty
+	 * @return hardSpaceHighScore, the current high score for the difficulty
 	 * and theme.
 	 */
-	public int getHardGalaxyHighScore() {
-		return hardGalaxyHighScore;
+	public int getHardSpaceHighScore() {
+		return hardSpaceHighScore;
 	}
 	
 	/**
 	 * A getter method. Returns the average score for the difficulty and
 	 * theme that are in the title of the method.
-	 * @return hardGalaxyAverage, the current average score for the difficulty
+	 * @return hardSpaceAverage, the current average score for the difficulty
 	 * and theme.
 	 */
-	public double getHardGalaxyAvg() {
-		return hardGalaxyAvg;
+	public double getHardSpaceAvg() {
+		return hardSpaceyAvg;
 	}
 
 }// end of file
