@@ -330,6 +330,7 @@ public class MemoryGame_GUI extends Application {
 	private void checkGameState() {
 		System.out.println("Difficulty = " + difficulty);
 		if (numMatches == 3 && difficulty.equals("easy") || numMatches == 6 && difficulty.equals("hard")) {
+			stats.addScore(theme, difficulty, game.getGameNumGuesses());
 			// All matches found, switch to end game screen
 			displayEndGamePopup();
 		}
