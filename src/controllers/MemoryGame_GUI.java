@@ -1,14 +1,17 @@
 package controllers;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
-/**
- 
- */
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -74,6 +77,7 @@ public class MemoryGame_GUI extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		this.mainStage = primaryStage;
+		readState();
 		setupMainScene();
 		mainStage.setTitle("Welcome to MemoryGame");
 		mainStage.setScene(mainScene);
@@ -313,6 +317,7 @@ public class MemoryGame_GUI extends Application {
 			flipCardBack(index1);
 			flipCardBack(index2);
 			resetCardState();
+			game.incGuesses();
 		});
 		pause.play();
 	}
@@ -356,6 +361,7 @@ public class MemoryGame_GUI extends Application {
 		Button yesButton = new Button("Yes");
 		Button quitButton = new Button("Quit");
 		quitButton.setOnAction(e->{
+			writeState();
 			System.exit(0);
 		});
 		HBox yesQuit = new HBox();
@@ -450,6 +456,41 @@ public class MemoryGame_GUI extends Application {
 		leaderboard.add(new Text(catHard), 2, 4);
 		leaderboard.add(new Text(carHard), 2, 5);	
 	}
+	
+	public void writeState() {
+		String fileName = "statsSave.ser";
+
+		try {
+			FileOutputStream bytesToDisk = new FileOutputStream(fileName);
+			ObjectOutputStream outFile = new ObjectOutputStream(bytesToDisk);
+			outFile.writeObject(stats);
+			outFile.close();
+		} catch (IOException ioe) {
+			System.out.println("Writing objects failed");
+		}
+	}
+
+	public void readState() {
+		try {
+			FileInputStream rawBytes = new FileInputStream("statsSave.ser");
+			ObjectInputStream inFile = new ObjectInputStream(rawBytes);
+
+			stats = (Stats) inFile.readObject();
+			inFile.close();
+			rawBytes.close();
+
+		} catch (FileNotFoundException f) {
+			System.out.println("File Not Found Exception");
+			return;
+		} catch (ClassNotFoundException c) {
+			System.out.println("Class Not Found Exception");
+			return;
+		} catch (IOException i) {
+			System.out.println("IO Exception");
+			return;
+		}
+	}
+	
 
 	/**
 	 * The main method of the MemoryGame_GUI class.

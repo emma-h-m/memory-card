@@ -1,11 +1,16 @@
 package models;
 
+import java.io.Serializable;
+
 /**
  * The Stats class maintains a record of numerous statiscal data
  * that is pertinent to the Memory Game, such as number of games played,
  * high scores, etc...
  */
-public class Stats {
+public class Stats implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
 	private double easyCatAvg, hardCatAvg, easyCarAvg, hardCarAvg, easySpaceAvg, hardSpaceyAvg = 0;
 	private int easyCatNumGames, hardCatNumGames, easyCarNumGames, hardCarNumGames, easySpaceNumGames,
 			hardSpaceNumGames = 0;
