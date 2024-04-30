@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
@@ -26,13 +27,20 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -53,10 +61,10 @@ public class MemoryGame_GUI extends Application {
 	private Scene themeScene;
 	private Scene difficultyScene;
 	private Scene gameScene;
-	
+
 	private Scene endGameScene;
 	private GridPane leaderboard;
-	
+
 	private Stage mainStage;
 	private MemoryGame game;
 	private String theme;
@@ -73,6 +81,10 @@ public class MemoryGame_GUI extends Application {
 	private boolean isAnimating = false;
 	private GridPane cardGrid;
 	private String difficulty;
+	private boolean isMuted = false;
+	private MediaPlayer mediaPlayer;
+	private AudioClip soundEffect;
+	private ToggleButton muteButton;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -83,6 +95,7 @@ public class MemoryGame_GUI extends Application {
 		mainStage.setScene(mainScene);
 		mainStage.show();
 		mainStage.setResizable(false);
+		playLobbyMusic();
 	}
 
 	private void setupMainScene() {
@@ -98,14 +111,78 @@ public class MemoryGame_GUI extends Application {
 		playButton.setPadding(new Insets(10, 7, 10, 7));
 		playButton.setFont(Font.font("Palatino", FontWeight.BOLD, 14));
 		playButton.setStyle(
-				"-fx-background-color: #322947FF; -fx-text-fill: #1D1231FF; -fx-border-color: #1D1231FF; -fx-border-width: 2px;");
-		playButton.setOnAction(e -> switchToThemeScene());
+				"-fx-background-color: #c69fa5; -fx-text-fill: #272744; -fx-border-color: #1D1231FF; -fx-border-width: 2px;");
+		playButton.setOnAction(e -> {
+			switchToThemeScene();
+			playSoundEffect("retroclick.wav");
+		});
+
 		// Set padding for the button container to adjust its position
 		buttonContainer.setPadding(new Insets(245, 0, 0, 2)); // Adjust the bottom inset (20 in this example) to
 																// position the button lower
 		buttonContainer.getChildren().add(playButton);
 		root.getChildren().add(buttonContainer);
 		mainScene = new Scene(root, 800, 600);
+
+		// stops music from continously playing when choosing to start a new game
+		stopMusic();
+	}
+
+	/**
+	 * This section implements music and sound effect functionality.
+	 */
+	public void playSong(String fileName) {
+		String projectDir = System.getProperty("user.dir"); // get the project directory
+		String path = Paths.get(projectDir, "music", fileName).toUri().toString();
+		Media media = new Media(path);
+		mediaPlayer = new MediaPlayer(media);
+		mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // loop the music
+		mediaPlayer.setMute(isMuted); // mute/unmute the music based on the current state
+		mediaPlayer.play();
+	}
+
+	public void playSoundEffect(String fileName) {
+		String projectDir = System.getProperty("user.dir"); // get the project directory
+		String path = Paths.get(projectDir, "music", fileName).toUri().toString();
+		soundEffect = new AudioClip(path);
+		soundEffect.play();
+	}
+
+	private void playLobbyMusic() {
+		String musicFileName = "lobbymusic.mp3";
+		playSong(musicFileName);
+	}
+
+	// method to toggle mute/unmute
+	private void toggleMute() {
+		isMuted = muteButton.isSelected(); // update the mute status
+		if (mediaPlayer != null) {
+			mediaPlayer.setMute(isMuted); // mute/unmute the music
+		}
+	}
+
+	// should hypothetically be able to addMuteButton(root); in the GUI scenes to
+	// have the mute button,
+	// but i'm having trouble integrating it independently.
+	// leaving this here for now in case we can add it since this still successfully
+	// mutes the music.
+	private void addMuteButton(VBox layout) {
+		muteButton = new ToggleButton("Mute");
+		muteButton.setOnAction(e -> toggleMute());
+
+		// Set the position of the mute button to top left
+		VBox.setMargin(muteButton, new Insets(10, 0, 0, 10)); // Adjust top, right, bottom, left margins as needed
+
+		// Do not set the alignment for the layout
+		layout.setAlignment(Pos.BOTTOM_CENTER);
+
+		layout.getChildren().add(muteButton);
+	}
+
+	private void stopMusic() {
+		if (mediaPlayer != null) {
+			mediaPlayer.stop();
+		}
 	}
 
 	private void switchToThemeScene() {
@@ -121,45 +198,69 @@ public class MemoryGame_GUI extends Application {
 		layout.setStyle("-fx-background-color: #272744;");
 		Text chooseThemeText = new Text("Choose the Theme:");
 		chooseThemeText.setFont(Font.font("Palatino", FontWeight.BOLD, 30));
-		chooseThemeText.setStyle("-fx-fill: #0C1126FF;");
+		chooseThemeText.setStyle("-fx-fill: #c69fa5;");
 		// HBox for buttons
 		HBox buttonBox = new HBox(20); // Increased space between buttons
 		buttonBox.setAlignment(Pos.CENTER);
 		// Button for Theme 1 (Earth)
 		ImageView earthView = new ImageView(new Image("file:Documents/cardimages/spacecardback.png"));
-		earthView.setFitHeight(170); // Increased size of the image
-		earthView.setFitWidth(150);
-		VBox earthBox = new VBox(5, earthView, new Text("Space"));
+		earthView.setFitHeight(190); // Increased size of the image
+		earthView.setFitWidth(140);
+		Text themeText = new Text("Space");
+		themeText.setFill(Color.web("#c69fa5")); // Set the text color (REAL)
+		VBox earthBox = new VBox(5, earthView, themeText);
 		earthBox.setAlignment(Pos.CENTER);
 		Button theme1 = new Button();
 		theme1.setGraphic(earthBox);
 		theme1.setStyle(
-				"-fx-background-color: #272744; -fx-text-fill: #0C1126FF; -fx-padding: 10; -fx-border-color: #0C1126FF; -fx-border-width: 2;");
+				"-fx-background-color: #272744; -fx-text-fill: #0C1126FF; -fx-padding: 10; -fx-border-color: #c69fa5; -fx-border-width: 2;");
 		theme1.setFont(new Font("Arial", 24));
 		// Button for Theme 2 (Cats)
 		ImageView catView = new ImageView(new Image("file:Documents/cardimages/catcardback.png"));
-		catView.setFitHeight(170); // Increased size of the image
-		catView.setFitWidth(150);
-		VBox catBox = new VBox(5, catView, new Text("Cats"));
+		catView.setFitHeight(190); // Increased size of the image
+		catView.setFitWidth(140);
+		Text catText = new Text("Cats");
+		catText.setFill(Color.web("#c69fa5")); // Set the text color (REAL)
+		VBox catBox = new VBox(5, catView, catText);
 		catBox.setAlignment(Pos.CENTER);
+
 		Button theme2 = new Button();
 		theme2.setGraphic(catBox);
 		theme2.setStyle(
-				"-fx-background-color: #272744; -fx-text-fill: #0C1126FF; -fx-padding: 10; -fx-border-color: #0C1126FF; -fx-border-width: 2;");
+				"-fx-background-color: #272744; -fx-text-fill: #0C1126FF; -fx-padding: 10; -fx-border-color: #c69fa5; -fx-border-width: 2;");
 		theme2.setFont(new Font("Arial", 24));
 		ImageView carView = new ImageView(new Image("file:Documents/cardimages/carcardback.png"));
-		carView.setFitHeight(170);
-		carView.setFitWidth(150);
-		VBox carBox = new VBox(5, carView, new Text("Cars"));
+		carView.setFitHeight(190);
+		carView.setFitWidth(140);
+		Text carText = new Text("Cars");
+		carText.setFill(Color.web("#c69fa5")); // Set the text color (REAL)
+		VBox carBox = new VBox(5, carView, carText);
 		carBox.setAlignment(Pos.CENTER);
+
 		Button theme3 = new Button();
 		theme3.setGraphic(carBox);
 		theme3.setStyle(
-				"-fx-background-color: #272744; -fx-text-fill: #0C1126FF; -fx-padding: 10; -fx-border-color: #0C1126FF; -fx-border-width: 2;");
+				"-fx-background-color: #272744; -fx-text-fill: #0C1126FF; -fx-padding: 10; -fx-border-color: #c69fa5; -fx-border-width: 2;");
 		theme3.setFont(new Font("Arial", 24));
-		theme1.setOnAction(e -> switchToDifficultyScene(1));
-		theme2.setOnAction(e -> switchToDifficultyScene(2));
-		theme3.setOnAction(e -> switchToDifficultyScene(3));
+
+		theme1.setOnAction(e -> {
+			switchToDifficultyScene(1);
+			stopMusic();
+			playSong("spacesong.mp3"); // play theme 1 music
+			playSoundEffect("pingeffect.wav");
+		});
+		theme2.setOnAction(e -> {
+			switchToDifficultyScene(2);
+			stopMusic();
+			playSong("catsong.mp3"); // play theme 2 music
+			playSoundEffect("pingeffect.wav");
+		});
+		theme3.setOnAction(e -> {
+			switchToDifficultyScene(3);
+			stopMusic();
+			playSong("carsong.mp3"); // play theme 3 music
+			playSoundEffect("pingeffect.wav");
+		});
 		// Adding buttons to the HBox
 		buttonBox.getChildren().addAll(theme1, theme2, theme3);
 		// Add the HBox to the main VBox
@@ -178,15 +279,21 @@ public class MemoryGame_GUI extends Application {
 		layout.setStyle("-fx-background-color: #272744;");
 		Text chooseDifficultyText = new Text("Choose the Difficulty:");
 		chooseDifficultyText.setFont(Font.font("Palatino", FontWeight.BOLD, 30));
-		chooseDifficultyText.setStyle("-fx-fill: #0C1126FF;");
+		chooseDifficultyText.setStyle("-fx-fill: #c69fa5;");
 		Button easyButton = new Button("Easy");
-		easyButton.setFont(Font.font("Palatino", 24));
-		easyButton.setStyle("-fx-background-color: #32CD32; -fx-text-fill: #0C1126FF;");
-		easyButton.setOnAction(e -> startGame(true, themeNumber));
+		easyButton.setFont(Font.font("Palatino", 28));
+		easyButton.setStyle("-fx-background-color: #f2d3ab; -fx-text-fill: #0C1126FF;");
+		easyButton.setOnAction(e -> {
+			startGame(true, themeNumber);
+			playSoundEffect("pingeffect.wav");
+		});
 		Button hardButton = new Button("Hard");
-		hardButton.setFont(Font.font("Palatino", 24));
-		hardButton.setStyle("-fx-background-color: #FF6347; -fx-text-fill: #0C1126FF;");
-		hardButton.setOnAction(e -> startGame(false, themeNumber));
+		hardButton.setFont(Font.font("Palatino", 28));
+		hardButton.setStyle("-fx-background-color: #8b6d9c; -fx-text-fill: #0C1126FF;");
+		hardButton.setOnAction(e -> {
+			startGame(false, themeNumber);
+			playSoundEffect("pingeffect.wav");
+		});
 		layout.getChildren().addAll(chooseDifficultyText, easyButton, hardButton);
 		difficultyScene = new Scene(layout, 800, 600);
 	}
@@ -248,6 +355,7 @@ public class MemoryGame_GUI extends Application {
 			StackPane cardPane = new StackPane(imageView, cardFrontView);
 			cardButton.setGraphic(cardPane);
 			cardButton.setOnAction(e -> {
+				playSoundEffect("flip.mp3");
 				if (!flippedOver2 && !cardButton.isDisabled()) { // Check if no animation is ongoing and the card is not
 																	// disabled
 					rotator.play();
@@ -286,6 +394,7 @@ public class MemoryGame_GUI extends Application {
 
 	private void handleMatch() {
 		PauseTransition pause = new PauseTransition(Duration.seconds(1));
+
 		pause.setOnFinished(event -> {
 			buttonArray.get(index1).setDisable(true);
 			buttonArray.get(index2).setDisable(true);
@@ -313,6 +422,7 @@ public class MemoryGame_GUI extends Application {
 	private void handleNoMatch() {
 		PauseTransition pause = new PauseTransition(Duration.seconds(1));
 		pause.setOnFinished(event -> {
+			playSoundEffect("flip.mp3");
 			// Flip both cards back
 			flipCardBack(index1);
 			flipCardBack(index2);
@@ -344,15 +454,14 @@ public class MemoryGame_GUI extends Application {
 		scrollPane.setFitToWidth(true);
 		scrollPane.setPrefHeight(400);
 		scrollPane.setStyle("-fx-background: #272744; -fx-background-color: #322947FF;");
-		
-		
+
 		VBox endGameBox = new VBox();
 		endGameBox.setAlignment(Pos.CENTER);
 		Text congratsText = new Text("Congratlations! You have found all matches!");
-		
+
 		setupLeaderboard();
 		leaderboard.setAlignment(Pos.CENTER);
-		
+
 		Text againText = new Text("Would you like to play again?");
 		congratsText.setFont(Font.font("Palatino", FontWeight.BOLD, 20));
 		congratsText.setStyle("-fx-fill: #FFFFFF;");
@@ -360,7 +469,7 @@ public class MemoryGame_GUI extends Application {
 		againText.setStyle("-fx-fill: #FFFFFF;");
 		Button yesButton = new Button("Yes");
 		Button quitButton = new Button("Quit");
-		quitButton.setOnAction(e->{
+		quitButton.setOnAction(e -> {
 			writeState();
 			System.exit(0);
 		});
@@ -368,9 +477,9 @@ public class MemoryGame_GUI extends Application {
 		yesQuit.setSpacing(15);
 		yesQuit.setAlignment(Pos.CENTER);
 		yesQuit.getChildren().addAll(yesButton, quitButton);
-		
-		
-		yesButton.setOnAction( e -> {
+
+		yesButton.setOnAction(e -> {
+			playSoundEffect("pingeffect.wav");
 			buttonArray = new ArrayList<Button>();
 			numMatches = 0;
 			flippedOver1 = false;
@@ -379,17 +488,16 @@ public class MemoryGame_GUI extends Application {
 			start(mainStage);
 		});
 		endGameBox.getChildren().addAll(congratsText, leaderboard, againText, yesQuit);
-		
+
 		scrollPane.setContent(endGameBox);
 		endGameScene = new Scene(scrollPane, 800, 600);
 		mainStage.setScene(endGameScene);
 		/*
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle("Game Over");
-		alert.setHeaderText(null);
-		alert.setContentText("Congratulations! You have found all matches.");
-		alert.show();
-		*/
+		 * Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		 * alert.setTitle("Game Over"); alert.setHeaderText(null);
+		 * alert.setContentText("Congratulations! You have found all matches.");
+		 * alert.show();
+		 */
 	}
 
 	private void flipCardBack(int index) {
@@ -424,7 +532,7 @@ public class MemoryGame_GUI extends Application {
 		secondHalf.setCycleCount(1);
 		return firstHalf;
 	}
-	
+
 	private void setupLeaderboard() {
 		leaderboard = new GridPane();
 		leaderboard.setGridLinesVisible(true);
@@ -434,29 +542,38 @@ public class MemoryGame_GUI extends Application {
 		String catHard = stats.getHardCatHighScore() + "";
 		String carEasy = stats.getEasyCarHighScore() + "";
 		String carHard = stats.getHardCarHighScore() + "";
-		
-		
-		//Column 0
-		leaderboard.add(new Text("Leaderboard"), 0, 0); //Span col 2 and 3
+
+		// Increase the column width
+		ColumnConstraints col1 = new ColumnConstraints(150);
+		ColumnConstraints col2 = new ColumnConstraints(150);
+		ColumnConstraints col3 = new ColumnConstraints(150);
+		leaderboard.getColumnConstraints().addAll(col1, col2, col3);
+
+		// Set a uniform row height for all rows
+		RowConstraints row = new RowConstraints(50); // height
+		leaderboard.getRowConstraints().addAll(row, row, row, row, row); // row constraints for each row
+
+		// Column 0
+		leaderboard.add(new Text("Leaderboard"), 0, 0);
 		leaderboard.add(new Text("Theme"), 0, 1);
 		leaderboard.add(new Text("Space"), 0, 3);
 		leaderboard.add(new Text("Cat"), 0, 4);
 		leaderboard.add(new Text("Car"), 0, 5);
-		
-		//Column 1
-		leaderboard.add(new Text("High Score"), 1, 1); //Span col 3
+
+		// Column 1
+		leaderboard.add(new Text("High Score"), 1, 1);
 		leaderboard.add(new Text("Easy"), 1, 2);
 		leaderboard.add(new Text(spaceEasy), 1, 3);
 		leaderboard.add(new Text(catEasy), 1, 4);
 		leaderboard.add(new Text(carEasy), 1, 5);
-		
-		//Column 2
+
+		// Column 2
 		leaderboard.add(new Text("Hard"), 2, 2);
 		leaderboard.add(new Text(spaceHard), 2, 3);
 		leaderboard.add(new Text(catHard), 2, 4);
-		leaderboard.add(new Text(carHard), 2, 5);	
+		leaderboard.add(new Text(carHard), 2, 5);
 	}
-	
+
 	public void writeState() {
 		String fileName = "statsSave.ser";
 
@@ -490,7 +607,6 @@ public class MemoryGame_GUI extends Application {
 			return;
 		}
 	}
-	
 
 	/**
 	 * The main method of the MemoryGame_GUI class.
