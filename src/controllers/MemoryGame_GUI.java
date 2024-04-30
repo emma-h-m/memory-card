@@ -468,6 +468,7 @@ public class MemoryGame_GUI extends Application {
 		congratsText.setStyle("-fx-fill: #c69fa5;");
 		againText.setFont(Font.font("Palatino", FontWeight.BOLD, 20));
 		againText.setStyle("-fx-fill: #c69fa5;");
+		Button yesButton = new Button("Yes");
 		yesButton.setStyle("-fx-background-color: #f2d3ab; -fx-text-fill: #0C1126FF;");
 		Button quitButton = new Button("Quit");
 		quitButton.setStyle("-fx-background-color: #8b6d9c; -fx-text-fill: #0C1126FF;");
