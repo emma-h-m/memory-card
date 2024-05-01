@@ -79,6 +79,7 @@ public class MemoryGame_GUI extends Application {
 	public void start(Stage primaryStage) {
 		this.mainStage = primaryStage;
 		readState();
+		addMuteButton();
 		setupMainScene();
 		mainStage.setTitle("Welcome to MemoryGame");
 		mainStage.setScene(mainScene);
@@ -92,7 +93,7 @@ public class MemoryGame_GUI extends Application {
 		Image backgroundImage = new Image("file:Documents/cardimages/welcomescreen.png");
 		String backgroundImageUrl = "url('" + backgroundImage.getUrl() + "')";
 		String style = "-fx-background-image: " + backgroundImageUrl + ";";
-		root.setAlignment(Pos.CENTER);
+		root.setAlignment(Pos.TOP_CENTER);
 		root.setStyle(style);
 		// Create a StackPane to contain the play button
 		StackPane buttonContainer = new StackPane();
@@ -107,12 +108,23 @@ public class MemoryGame_GUI extends Application {
 		});
 
 		// Set padding for the button container to adjust its position
-		buttonContainer.setPadding(new Insets(245, 0, 0, 2)); // Adjust the bottom inset (20 in this example) to
+		buttonContainer.setPadding(new Insets(320, 0, 40, 2)); // Adjust the bottom inset (20 in this example) to
 																// position the button lower
+		//root.setStyle("-fx-border-style: solid; -fx-border-width: 5px; -fx-border-color: red;");
+	
+		
 		buttonContainer.getChildren().add(playButton);
-		root.getChildren().add(buttonContainer);
+		//buttonContainer.setStyle("-fx-border-style: solid; -fx-border-width: 5px;");
+		
+		HBox muteButtonContainer = new HBox();
+		muteButtonContainer.setPadding(new Insets(35, 0, 0, 35));
+		muteButtonContainer.getChildren().add(muteButton);
+		//muteButtonContainer.setStyle("-fx-border-style: dashed; -fx-border-width: 5px;");
+		
+		root.getChildren().addAll(muteButtonContainer, buttonContainer);
+		
 		mainScene = new Scene(root, 800, 600);
-
+		//root.setStyle("-fx-border-style: solid; -fx-border-width: 5px;");
 		// stops music from continously playing when choosing to start a new game
 		stopMusic();
 	}
@@ -145,6 +157,17 @@ public class MemoryGame_GUI extends Application {
 	// method to toggle mute/unmute
 	private void toggleMute() {
 		isMuted = muteButton.isSelected(); // update the mute status
+		
+		Text muteText = new Text("Mute");
+		Text unmuteText = new Text("Unmute");
+		
+		if (!isMuted) {
+			muteButton.setGraphic(muteText);
+		}
+		else {
+			muteButton.setGraphic(unmuteText);
+		}
+		
 		if (mediaPlayer != null) {
 			mediaPlayer.setMute(isMuted); // mute/unmute the music
 		}
@@ -155,17 +178,31 @@ public class MemoryGame_GUI extends Application {
 	// but i'm having trouble integrating it independently.
 	// leaving this here for now in case we can add it since this still successfully
 	// mutes the music.
-	private void addMuteButton(VBox layout) {
-		muteButton = new ToggleButton("Mute");
+	private void addMuteButton() {
+		Text muteText = new Text("Mute");
+		Text unmuteText = new Text("Unmute");
+		
+		muteButton = new ToggleButton();
+		muteButton.setStyle(
+				"-fx-background-color: #c69fa5; -fx-text-fill: #272744; -fx-border-color: #1D1231FF; -fx-border-width: 2px;");
+		if (!isMuted) {
+			muteButton.setGraphic(muteText);
+		}
+		else {
+			muteButton.setGraphic(unmuteText);
+		}
+		
+		
+		muteButton.setPrefSize(50, 25);
 		muteButton.setOnAction(e -> toggleMute());
 
 		// Set the position of the mute button to top left
-		VBox.setMargin(muteButton, new Insets(10, 0, 0, 10)); // Adjust top, right, bottom, left margins as needed
+		//VBox.setMargin(muteButton, new Insets(10, 0, 0, 10)); // Adjust top, right, bottom, left margins as needed
 
 		// Do not set the alignment for the layout
-		layout.setAlignment(Pos.BOTTOM_CENTER);
+		//layout.setAlignment(Pos.BOTTOM_CENTER);
 
-		layout.getChildren().add(muteButton);
+		//layout.getChildren().add(muteButton);
 	}
 
 	private void stopMusic() {
