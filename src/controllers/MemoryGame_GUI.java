@@ -75,6 +75,7 @@ public class MemoryGame_GUI extends Application {
 	private ArrayList<Button> buttonArray = new ArrayList<Button>();
 	private int index1, index2;
 	private boolean flippedOver1, flippedOver2 = false;
+	private int numGuesses = 0;
 	private int numMatches = 0;
 	private Stats stats = new Stats();
 	private Deck deck;
@@ -408,7 +409,7 @@ public class MemoryGame_GUI extends Application {
 			cardGrid.getChildren().remove(buttonArray.get(index2));
 			cardGrid.add(placeholder2, GridPane.getColumnIndex(buttonArray.get(index2)),
 					GridPane.getRowIndex(buttonArray.get(index2)));
-			game.incGuesses();
+			numGuesses++;
 			numMatches++;
 			//System.out.println("Number of matches made: " + numMatches);
 			resetCardState();
@@ -427,7 +428,7 @@ public class MemoryGame_GUI extends Application {
 			flipCardBack(index1);
 			flipCardBack(index2);
 			resetCardState();
-			game.incGuesses();
+			numGuesses++;
 		});
 		pause.play();
 	}
@@ -443,13 +444,15 @@ public class MemoryGame_GUI extends Application {
 	private void checkGameState() {
 		//System.out.println("Difficulty = " + difficulty);
 		if (numMatches == 3 && difficulty.equals("easy") || numMatches == 6 && difficulty.equals("hard")) {
-			stats.addScore(theme, difficulty, game.getGameNumGuesses());
+			stats.addScore(theme, difficulty, numGuesses);
+			writeState();
 			// All matches found, switch to end game screen
 			displayEndGamePopup();
 		}
 	}
 
 	private void displayEndGamePopup() {
+		
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setFitToWidth(true);
 		scrollPane.setPrefHeight(400);
@@ -460,7 +463,7 @@ public class MemoryGame_GUI extends Application {
 		
 		Text congratsText = new Text("Congratulations! You have found all matches!");
 		
-		Text reportText = new Text("It took you " + game.getGameNumGuesses() + " guesses!");
+		Text reportText = new Text("It took you " + numGuesses + " guesses!");
 		reportText.setFont(Font.font("Palatino", FontWeight.BOLD, 20));
 		reportText.setFill(Color.web("#c69fa5"));
 		
@@ -481,7 +484,6 @@ public class MemoryGame_GUI extends Application {
 		Button quitButton = new Button("Quit");
 		quitButton.setStyle("-fx-background-color: #8b6d9c; -fx-text-fill: #0C1126FF;");
 		quitButton.setOnAction(e -> {
-			writeState();
 			System.exit(0);
 		});
 		HBox yesQuit = new HBox();
@@ -492,6 +494,7 @@ public class MemoryGame_GUI extends Application {
 		yesButton.setOnAction(e -> {
 			playSoundEffect("pingeffect.wav");
 			buttonArray = new ArrayList<Button>();
+			numGuesses = 0;
 			numMatches = 0;
 			flippedOver1 = false;
 			flippedOver2 = false;

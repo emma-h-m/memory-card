@@ -104,11 +104,6 @@ public class MemoryGame {
 		numGuesses++;
 	}
 
-	// Returns the card that user selected
-	public Card chooseCard(Card userCard) {
-		
-		return userCard;
-	}
 
 	// This method sets match to true if the cards have the same title.
 	// If they don't, match is set to false.
@@ -118,10 +113,7 @@ public class MemoryGame {
 		} else {
 			return false;
 		}
-	} // Note: We need to make sure the user can't select the same card twice.
-	  // We can do that by disabling the first selection in the GUI, or we can
-	  // add another variable to the cards and compare the title AND the variable
-	  // to make sure it's not the same exact card.
+	} 
 
 	
 	/*

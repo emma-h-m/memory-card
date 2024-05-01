@@ -27,6 +27,7 @@ public class Stats implements Serializable {
 
 	}
 	
+	
 	/**
 	 * The addScore() method updates the Stats object with the score of the most
 	 * recently played game. It increments the number of games played, calculates 
@@ -38,7 +39,7 @@ public class Stats implements Serializable {
 	 * @param numGuesses Used for the calculation of averages and high scores.
 	 */
 	public void addScore(String theme, String difficulty, int numGuesses) {
-		if (theme == "cat") {
+		if (theme.equals("cat")) {
 			if (difficulty == "easy") {
 				easyCatNumGames++;
 				easyCatRawScore += numGuesses;
@@ -63,7 +64,7 @@ public class Stats implements Serializable {
 			}
 		} // end of cat if statements
 
-		else if (theme == "car") {
+		else if (theme.equals("car")) {
 			if (difficulty == "easy") {
 				easyCarNumGames++;
 				easyCarRawScore += numGuesses;
@@ -89,7 +90,7 @@ public class Stats implements Serializable {
 		} // end of car if statememts
 
 		else { // theme == "Space"
-			if (difficulty == "easy") {
+			if (difficulty.equals("easy")) {
 				easySpaceNumGames++;
 				easySpaceRawScore += numGuesses;
 				easySpaceAvg = easySpaceRawScore / easySpaceNumGames;
