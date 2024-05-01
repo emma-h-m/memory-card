@@ -631,6 +631,7 @@ public class MemoryGame_GUI extends Application {
 		RowConstraints row = new RowConstraints(50);
 		leaderboard.getRowConstraints().addAll(row, row, row, row);
 
+
 		// Add title and leaderboard to the scene
 		VBox leaderboardBox = new VBox();
 		leaderboardBox.setAlignment(Pos.TOP_CENTER); // Align to the top
