@@ -313,7 +313,6 @@ public class MemoryGame_GUI extends Application {
 			theme = "cat";
 		else
 			theme = "car";
-		System.out.println(theme);
 		game = new MemoryGame(theme, difficulty);
 		VBox layout = new VBox(20);
 		layout.setAlignment(Pos.CENTER);
@@ -411,7 +410,7 @@ public class MemoryGame_GUI extends Application {
 					GridPane.getRowIndex(buttonArray.get(index2)));
 			game.incGuesses();
 			numMatches++;
-			System.out.println("Number of matches made: " + numMatches);
+			//System.out.println("Number of matches made: " + numMatches);
 			resetCardState();
 
 			// Check the game state after each match
@@ -442,7 +441,7 @@ public class MemoryGame_GUI extends Application {
 	// tried adding functionality for game over screen/popup but did not work,
 	// troubleshooting
 	private void checkGameState() {
-		System.out.println("Difficulty = " + difficulty);
+		//System.out.println("Difficulty = " + difficulty);
 		if (numMatches == 3 && difficulty.equals("easy") || numMatches == 6 && difficulty.equals("hard")) {
 			stats.addScore(theme, difficulty, game.getGameNumGuesses());
 			// All matches found, switch to end game screen
@@ -458,7 +457,16 @@ public class MemoryGame_GUI extends Application {
 
 		VBox endGameBox = new VBox();
 		endGameBox.setAlignment(Pos.CENTER);
+		
 		Text congratsText = new Text("Congratulations! You have found all matches!");
+		
+		Text reportText = new Text("It took you " + game.getGameNumGuesses() + " guesses!");
+		reportText.setFont(Font.font("Palatino", FontWeight.BOLD, 20));
+		reportText.setFill(Color.web("#c69fa5"));
+		
+		Text highScoreText = new Text("High Scores");
+		highScoreText.setFont(Font.font("Palatino", FontWeight.BOLD, 20));
+		highScoreText.setFill(Color.web("#c69fa5"));
 
 		setupLeaderboard();
 		leaderboard.setAlignment(Pos.CENTER);
@@ -492,11 +500,13 @@ public class MemoryGame_GUI extends Application {
 		});
 
 		// Add some space below the elements
-		VBox.setMargin(congratsText, new Insets(40, 0, 20, 0)); // Add 20 pixels bottom margin
-		VBox.setMargin(leaderboard, new Insets(20, 0, 20, 0)); // Add 20 pixels bottom margin
+		VBox.setMargin(congratsText, new Insets(40, 0, 5, 0)); // Add 20 pixels bottom margin
+		VBox.setMargin(reportText, new Insets(0, 0, 20, 0));
+		VBox.setMargin(highScoreText, new Insets(15, 0, 5, 0));
+		VBox.setMargin(leaderboard, new Insets(0, 0, 20, 0)); // Add 20 pixels bottom margin
 		VBox.setMargin(againText, new Insets(20, 0, 0, 0)); // Add 20 pixels top margin
 		VBox.setMargin(yesQuit, new Insets(20, 0, 0, 0)); // Add 20 pixels top margin
-		endGameBox.getChildren().addAll(congratsText, leaderboard, againText, yesQuit);
+		endGameBox.getChildren().addAll(congratsText, reportText, highScoreText, leaderboard, againText, yesQuit);
 
 		scrollPane.setContent(endGameBox);
 		endGameScene = new Scene(scrollPane, 800, 600);

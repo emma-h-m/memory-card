@@ -18,7 +18,7 @@ public class MemoryGame {
 	private String difficulty;
 	private String theme;
 	//private int score = 0;
-	private int numGuesses = 0;
+	private int numGuesses;
 	private boolean match = false;
 	private boolean playAgain = true;
 	
@@ -39,6 +39,7 @@ public class MemoryGame {
 	public MemoryGame(String themeSelection, String mode) {
 		theme = themeSelection;
 		difficulty = mode;
+		numGuesses = 0;
 		Deck deckObject = new Deck(theme, difficulty);
 		deckObject.createDeck();
 		deck = deckObject.getDeck();
