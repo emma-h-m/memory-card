@@ -585,6 +585,7 @@ public class MemoryGame_GUI extends Application {
 		title.setFill(Color.web("#c69fa5")); // Change color here
 
 		// Column and row labels
+		Text themeLabel = new Text("  Themes");
 		Text easyLabel = new Text("  Easy");
 		Text hardLabel = new Text("  Hard");
 		Text catLabel = new Text("  Cat");
@@ -592,12 +593,14 @@ public class MemoryGame_GUI extends Application {
 		Text spaceLabel = new Text("  Space");
 
 		// Set font and color for labels
+		themeLabel.setFont(Font.font("Palatino", FontWeight.BOLD, 16));
 		easyLabel.setFont(Font.font("Palatino", FontWeight.BOLD, 16));
 		hardLabel.setFont(Font.font("Palatino", FontWeight.BOLD, 16));
 		catLabel.setFont(Font.font("Palatino", FontWeight.BOLD, 16));
 		carLabel.setFont(Font.font("Palatino", FontWeight.BOLD, 16));
 		spaceLabel.setFont(Font.font("Palatino", FontWeight.BOLD, 16));
 
+		themeLabel.setFill(Color.web("#c69fa5"));
 		easyLabel.setFill(Color.web("#c69fa5")); // Change color here
 		hardLabel.setFill(Color.web("#c69fa5")); // Change color here
 		catLabel.setFill(Color.web("#c69fa5")); // Change color here
@@ -605,6 +608,7 @@ public class MemoryGame_GUI extends Application {
 		spaceLabel.setFill(Color.web("#c69fa5")); // Change color here
 
 		// Add labels to the grid
+		leaderboard.add(themeLabel, 0, 0);
 		leaderboard.add(easyLabel, 1, 0);
 		leaderboard.add(hardLabel, 2, 0);
 		leaderboard.add(catLabel, 0, 1);
