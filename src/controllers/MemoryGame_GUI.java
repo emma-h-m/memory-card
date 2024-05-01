@@ -342,9 +342,9 @@ public class MemoryGame_GUI extends Application {
 		VBox layout = new VBox(20);
 		layout.setAlignment(Pos.CENTER);
 		layout.setStyle("-fx-background-color: #272744;");
-		Text gameInfoText = new Text("You are playing " + (cardCount == 6 ? "Easy" : "Hard") + " mode.");
+		Text gameInfoText = new Text("You are playing " + (cardCount == 6 ? "easy" : "hard") + " mode.");
 		gameInfoText.setFont(Font.font("Palatino", FontWeight.BOLD, 20));
-		gameInfoText.setStyle("-fx-fill: #FFFFFF;");
+		gameInfoText.setStyle("-fx-fill: #c69fa5;");
 		ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setFitToWidth(true);
 		scrollPane.setPrefHeight(400);
