@@ -153,6 +153,10 @@ public class Deck {
 		Collections.shuffle(deck);
 	}
 
+	/**
+	 * A getter method.
+	 * @return Returns the deck as an ArrayList of Card objects.
+	 */
 	public ArrayList<Card> getDeck() {
 		return deck;
 	}

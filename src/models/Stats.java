@@ -18,15 +18,6 @@ public class Stats implements Serializable {
 			hardSpaceRawScore = 0;
 	private int easyCatHighScore, hardCatHighScore, easyCarHighScore, hardCarHighScore, easySpaceHighScore,
 			hardSpaceHighScore = 0;
-
-	// Constructor
-	/**
-	 * The constructor for the Stats class is currently unused.
-	 */
-	public Stats() {
-
-	}
-	
 	
 	/**
 	 * The addScore() method updates the Stats object with the score of the most

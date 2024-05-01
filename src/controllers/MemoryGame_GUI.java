@@ -9,24 +9,15 @@ import java.io.ObjectOutputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Optional;
 import javafx.animation.Interpolator;
 import javafx.animation.PauseTransition;
 import javafx.animation.RotateTransition;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
@@ -71,16 +62,12 @@ public class MemoryGame_GUI extends Application {
 	private String theme;
 	private Card card1, card2;
 	private int numSel = 0;
-	private boolean match = false;
 	private ArrayList<Button> buttonArray = new ArrayList<Button>();
 	private int index1, index2;
 	private boolean flippedOver1, flippedOver2 = false;
-	private int numGuesses = 0;
 	private int numMatches = 0;
 	private Stats stats = new Stats();
 	private Deck deck;
-	private boolean playAgain = false;
-	private boolean isAnimating = false;
 	private GridPane cardGrid;
 	private String difficulty;
 	private boolean isMuted = false;
@@ -133,7 +120,7 @@ public class MemoryGame_GUI extends Application {
 	/**
 	 * This section implements music and sound effect functionality.
 	 */
-	public void playSong(String fileName) {
+	private void playSong(String fileName) {
 		String projectDir = System.getProperty("user.dir"); // get the project directory
 		String path = Paths.get(projectDir, "music", fileName).toUri().toString();
 		Media media = new Media(path);
@@ -143,7 +130,7 @@ public class MemoryGame_GUI extends Application {
 		mediaPlayer.play();
 	}
 
-	public void playSoundEffect(String fileName) {
+	private void playSoundEffect(String fileName) {
 		String projectDir = System.getProperty("user.dir"); // get the project directory
 		String path = Paths.get(projectDir, "music", fileName).toUri().toString();
 		soundEffect = new AudioClip(path);
@@ -314,7 +301,7 @@ public class MemoryGame_GUI extends Application {
 			theme = "cat";
 		else
 			theme = "car";
-		game = new MemoryGame(theme, difficulty);
+		game = new MemoryGame(theme, difficulty, deck);
 		VBox layout = new VBox(20);
 		layout.setAlignment(Pos.CENTER);
 		layout.setStyle("-fx-background-color: #272744;");
@@ -409,7 +396,7 @@ public class MemoryGame_GUI extends Application {
 			cardGrid.getChildren().remove(buttonArray.get(index2));
 			cardGrid.add(placeholder2, GridPane.getColumnIndex(buttonArray.get(index2)),
 					GridPane.getRowIndex(buttonArray.get(index2)));
-			numGuesses++;
+			game.incGuesses();
 			numMatches++;
 			//System.out.println("Number of matches made: " + numMatches);
 			resetCardState();
@@ -428,7 +415,7 @@ public class MemoryGame_GUI extends Application {
 			flipCardBack(index1);
 			flipCardBack(index2);
 			resetCardState();
-			numGuesses++;
+			game.incGuesses();
 		});
 		pause.play();
 	}
@@ -439,12 +426,11 @@ public class MemoryGame_GUI extends Application {
 		flippedOver2 = false;
 	}
 
-	// tried adding functionality for game over screen/popup but did not work,
-	// troubleshooting
+	// Checks if the game is over and ends the game if needed.
 	private void checkGameState() {
 		//System.out.println("Difficulty = " + difficulty);
 		if (numMatches == 3 && difficulty.equals("easy") || numMatches == 6 && difficulty.equals("hard")) {
-			stats.addScore(theme, difficulty, numGuesses);
+			stats.addScore(theme, difficulty, game.getGameNumGuesses());
 			writeState();
 			// All matches found, switch to end game screen
 			displayEndGamePopup();
@@ -463,7 +449,7 @@ public class MemoryGame_GUI extends Application {
 		
 		Text congratsText = new Text("Congratulations! You have found all matches!");
 		
-		Text reportText = new Text("It took you " + numGuesses + " guesses!");
+		Text reportText = new Text("It took you " + game.getGameNumGuesses() + " guesses!");
 		reportText.setFont(Font.font("Palatino", FontWeight.BOLD, 20));
 		reportText.setFill(Color.web("#c69fa5"));
 		
@@ -494,7 +480,6 @@ public class MemoryGame_GUI extends Application {
 		yesButton.setOnAction(e -> {
 			playSoundEffect("pingeffect.wav");
 			buttonArray = new ArrayList<Button>();
-			numGuesses = 0;
 			numMatches = 0;
 			flippedOver1 = false;
 			flippedOver2 = false;
@@ -514,12 +499,6 @@ public class MemoryGame_GUI extends Application {
 		scrollPane.setContent(endGameBox);
 		endGameScene = new Scene(scrollPane, 800, 600);
 		mainStage.setScene(endGameScene);
-		/*
-		 * Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		 * alert.setTitle("Game Over"); alert.setHeaderText(null);
-		 * alert.setContentText("Congratulations! You have found all matches.");
-		 * alert.show();
-		 */
 	}
 
 	private void flipCardBack(int index) {
@@ -658,7 +637,8 @@ public class MemoryGame_GUI extends Application {
 		leaderboardBox.getChildren().addAll(title, leaderboard);
 	}
 
-	public void writeState() {
+	// Saves the high scores.
+	private void writeState() {
 		String fileName = "statsSave.ser";
 
 		try {
@@ -671,7 +651,8 @@ public class MemoryGame_GUI extends Application {
 		}
 	}
 
-	public void readState() {
+	// Loads the high scores.
+	private void readState() {
 		try {
 			FileInputStream rawBytes = new FileInputStream("statsSave.ser");
 			ObjectInputStream inFile = new ObjectInputStream(rawBytes);
